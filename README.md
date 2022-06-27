@@ -12,13 +12,13 @@ The following steps can be followed sequentially for the complete analysis and t
 2A.) : Normalisation of Bioplex Assay analytes and fold change over untreated control.
 2B.) : Normalisation of Western Blot analytes and fold change over untreated control.
 
-**Step3 :** Merging the fold change data from from the two Assays and preparation of the combined MIDAS files that are used as input to STASNet for modeling.
+**Step 3 :** Merging the fold change data from from the two Assays and preparation of the combined MIDAS files that are used as input to STASNet for modeling.
 
-**Step4 :** Building the model and network extension that resulted in addition of 10 links.
+**Step 4 :** Building the model and network extension that resulted in addition of 10 links.
 
-**Step5 :** Profile Likelihood analysis to compute confidence interval for the model parameters.
+**Step 5 :** Profile Likelihood analysis to compute confidence interval for the model parameters.
 
-**Step6 :** Comparing the experimental data with simulation results from the initial network model and the completed network model.
+**Step 6 :** Comparing the experimental data with simulation results from the initial network model and the completed network model.
 
 **Step 7:** Analysis of results from validation experiments.
 
