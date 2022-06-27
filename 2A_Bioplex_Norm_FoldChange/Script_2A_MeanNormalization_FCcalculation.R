@@ -31,7 +31,6 @@ Fetch_Bioplex_Data <- function(datas,control){
   
   Treatmentnames <- row.names(full_datas)
   
-  #CAUTION : MFI values printed by Maturin's script are in their log2. However, the MFI values that I am using here for LOG2FC calculation are the raw values. Hence division is fine.
   logFC <- data.frame(log2(datas/control))
   FC <- data.frame(datas/control)
   rawMFI <- data.frame(full_datas)
@@ -102,7 +101,7 @@ Normalize_Bioplex_allMean <- function(data_df, ReplicateNum, X_Status) {
   
   sub_data_mean_Norm <- sub_data_mean_Norm_calc %>% 
     transmute(Replicate, # Transmute retains all the columns that are passed to it.  
-              Treatment, #So u can list the columns that u want retained even when u dont use them to calculate new columns.
+              Treatment, 
               x_status,
               Gsk3_Norm = Gsk3/Gsk3_mean,
               Mek_Norm = Mek/Mek_mean,
@@ -175,7 +174,7 @@ for(i in 1:length(Replicate_files)) {
   my_file_name <- strsplit(my_file_name,"_")[[1]][1]
   
   cargs <- file.path(Bioplex_folder,Replicate_files[i])
-  #source(file.path(Bioplex_folder,"plotMIDAS.R"))
+  
   source(file.path(lxb_analysis_folder,"plotMIDAS.R"))
   
   
