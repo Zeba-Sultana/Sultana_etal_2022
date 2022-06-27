@@ -1,0 +1,1491 @@
+---
+title: 'CT Gsk3 Inhibitor Dose Response'
+date: 'Jun 2021'
+output:  
+  html_document:
+    code_folding: show
+    toc: false
+    toc_depth: 3
+    toc_float: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Doses of Gsk3 Inhibitor :0,1.5,3,6,12,24 uM**        
+**Treatment durtaion : 30 min**        
+**Quantification steps :**   
+
+
+* I read in the quantification file and assign the sample names.
+* I filter channel 800 values as phorphorylated, and 700 values as unphorphorylated signal.
+* Samples were distributed across 3 gels for each analyte :     
+Akt+pAkt : Gel1(R1), Gel22(R2), Gel23(R3)      
+p70S6k+TPS : Gel3(R1), Gel19(R2), Gel20(R3)       
+Gel19-23 also have some samples from a sample marked R1, but these were later dropped since in this case XX and XO samples were on two different gels and one of the lanes had a smear. I had one set of replicate from my previous experiments.
+
+I use the mean signal of each gel to normalize the signal values across the gels : I had done it by two methods to cross-chek results.Both give almost the same values. I have selected M2 for plotting :    
+**M1** : I divide Signal by total(protein/stain) for each well. Then I normalize each of these Signal_by_Total over the mean Signal_by_Total.   
+**M2** : I divide Signal of each well by mean signal for the gel. Similarly,I divide total(protein/stain) of each well by mean total(protein/stain) for the gel. Then I divide normalized signal for each well over the normalized total(protein/stain) for that well. 
+
+* Finally, for each replicate, I calculate the FC over XX control and FC over respective cell line control.
+
+#  {.tabset}
+
+## Libraries_InputDirectoryPath
+```{r echo=FALSE}
+library(readxl) # Needed for read_excel.Part of tidyverse, but needs to be installed separately.(Working on Mac but not my Linux - Check !)
+library(tidyr)
+library(ggplot2)
+library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
+library(ggpubr) # needed for compare_means
+library(ggrepel)
+library(egg) #needed for set_panel_size, to get predefined sizes of figure panels.
+library(dplyr)
+library(plyr)
+library(knitr) # for making HTML tables using the function kable()
+#library(Cairo)
+source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
+source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
+
+Gsk3inh_CT_Doses =c("0","1.5","3","6","12","24")
+
+quant_folder="/Users/sultana/PHD_PROJECT_Zeba/LAB/MY_EXPERIMENTS/ODYSSEY_Data/May2020_Onwards/My_Band_Quants/Analytes/"
+image_folder="/Users/sultana/PHD_PROJECT_Zeba/LAB/MY_EXPERIMENTS/ODYSSEY_Data/May2020_Onwards/My_Pics/Analytes/"
+empiria_folder = "/Users/sultana/PHD_PROJECT_Zeba/LAB/MY_EXPERIMENTS/ODYSSEY_Data/May2020_Onwards/My_Band_Quants/TPS_Empiria/EmpiriaReports/"
+empiria_2021_folder="/Users/sultana/PHD_PROJECT_Zeba/LAB/MY_EXPERIMENTS/ODYSSEY_Data/May2020_Onwards/My_Band_Quants/TPS_Empiria/EmpiriaReports_2021/"
+
+dir.create("./OutputFiles") # Create folder to save output data
+#dir.create("./OUTPUT") # Create folder to save plot for the paper
+
+
+```
+
+## Functions    
+Function ReadInWBData : In case of GSK3i_pAkt, need leave out some lanes since there was a smear in Gel23.     
+I am using only the mean of R3 samples on Gel23  & only the mean of R2 samples on Gel22. In other cases I'll use the mean of the whole gel as long as the samples on each of the gels from which data is aggregated are the same.
+
+
+## pAkt{.tabset .tabset-fade}
+**Gel1(R1)**
+```{r message = FALSE, out.width=c(500), fig.height=5, fig.show='hold'}
+
+
+image_files = c("0001720_02_JuneGel1_CTDR_Aktp.png")
+
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+
+```
+
+**Gel22(R2)**
+```{r message = FALSE, out.width=c(500), fig.height=5, fig.show='hold'}
+
+
+image_files = c("0000062_02_JuneGel22_CTDR_Aktp.png")
+
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+
+```
+
+**Gel23(R3)**
+```{r message = FALSE, out.width=c(500), fig.height=5, fig.show='hold'}
+
+
+image_files = c("0000063_02_JuneGel23_CTDR_Aktp.png")
+
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+
+```
+
+
+**pAkt_Akt : Reading in Data, Normalization and FC calculation  **
+**pAkt_Akt : Reading in Data, Normalization and FC calculation  **
+```{r echo=FALSE}
+
+
+#########  Gel1 : R1   ######### 
+
+Gel1_samples = c(
+  "XX_R1_cntrl_CTDR",
+  "XX_R1_1.5_CTDR",
+  "XX_R1_3_CTDR",
+  "XX_R1_6_CTDR",
+  "XX_R1_12_CTDR",
+  "XX_R1_24_CTDR",
+  "XO_R1_cntrl_CTDR",
+  "XO_R1_1.5_CTDR",
+  "XO_R1_3_CTDR",
+  "XO_R1_6_CTDR",
+  "XO_R1_12_CTDR",
+  "XO_R1_24_CTDR"
+)
+
+Gel1_Akt_quant_file = c("0001720_02_JuneGel1_GSK3iDR_Aktp.xls")
+Gel1_AktDB <-  read_excel(file.path(quant_folder,Gel1_Akt_quant_file))
+
+Gel1_AktDB_labeled <- ReadInWBData(Gel1_samples, Gel1_AktDB, Gsk3inh_CT_Doses, "Gel1", "Akt")
+#Gel1_AktDB_NormOCom <- Norm_o_ComSample(Gel1_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
+
+Gel1_Akt_NormOMeanRep <- Norm_o_MeanRep(Gel1_AktDB_labeled)
+
+
+#########  Gel22 : R2 + R1XX(dropped)   #########  
+
+Gel22_samples = c(
+  "XO_R1_cntrl_CTDR",
+  "XX_R1_cntrl_CTDR",
+  "XX_R1_1.5_CTDR",
+  "XX_R1_3_CTDR",
+  "XX_R1_6_CTDR",
+  "XX_R1_12_CTDR",
+  "XX_R1_24_CTDR",
+  "XO_R2_cntrl_CTDR",
+  "XO_R2_1.5_CTDR",
+  "XO_R2_3_CTDR",
+  "XO_R2_6_CTDR",
+  "XO_R2_12_CTDR",
+  "XO_R2_24_CTDR",
+  "XX_R2_cntrl_CTDR",
+  "XX_R2_1.5_CTDR",
+  "XX_R2_3_CTDR",
+  "XX_R2_6_CTDR",
+  "XX_R2_12_CTDR",
+  "XX_R2_24_CTDR")
+
+Gel22_Akt_quant_file = c("0000062_02_JuneGel22_GSK3iDR_Aktp.xls")
+Gel22_AktDB <-  read_excel(file.path(quant_folder,Gel22_Akt_quant_file))
+
+Gel22_AktDB_labeled <- ReadInWBData(Gel22_samples, Gel22_AktDB, Gsk3inh_CT_Doses, "Gel22", "Akt")
+#Gel22_AktDB_NormOCom <- Norm_o_ComSample(Gel22_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
+
+# Removing replicate 1, now that I have a new dataset for that replicate
+Gel22_AktDB_labeled <- Gel22_AktDB_labeled %>% 
+  filter(Replicate != "R1")
+
+Gel22_Akt_NormOMeanRep <- Norm_o_MeanRep(Gel22_AktDB_labeled)
+
+
+#########  Gel23 : R3 + R1XO(dropped)    #########  
+
+Gel23_samples = c(
+  "XO_R1_cntrl_CTDR",
+  "XO_R1_3_CTDR",
+  "XO_R1_6_CTDR",
+  "XO_R1_12_CTDR",
+  "XO_R1_24_CTDR",
+  "XX_R3_cntrl_CTDR",
+  "XX_R3_1.5_CTDR",
+  "XX_R3_3_CTDR",
+  "XX_R3_6_CTDR",
+  "XX_R3_12_CTDR",
+  "XX_R3_24_CTDR",
+  "XO_R3_cntrl_CTDR",
+  "XO_R3_1.5_CTDR",
+  "XO_R3_3_CTDR",
+  "XO_R3_6_CTDR",
+  "XO_R3_12_CTDR",
+  "XO_R3_24_CTDR")
+Gel23_Akt_quant_file = c("0000063_02_JuneGel23_GSK3iDR_Aktp.xls")
+Gel23_AktDB <-  read_excel(file.path(quant_folder,Gel23_Akt_quant_file))
+
+Gel23_AktDB_labeled <- ReadInWBData(Gel23_samples, Gel23_AktDB, Gsk3inh_CT_Doses, "Gel23", "Akt")
+#Gel23_AktDB_NormOCom <- Norm_o_ComSample(Gel23_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
+
+Gel23_AktDB_labeled <- Gel23_AktDB_labeled %>% 
+  filter(Replicate != "R1")
+
+Gel23_Akt_NormOMeanRep <- Norm_o_MeanRep(Gel23_AktDB_labeled)
+
+
+
+#########  Collate the 3 REPLICATES #####
+
+CTDR_Akt_NormOMeanRep <- dplyr::bind_rows(Gel1_Akt_NormOMeanRep,Gel22_Akt_NormOMeanRep, Gel23_Akt_NormOMeanRep) 
+
+# CTDR_Akt_NormOMeanRep <-   CTDR_Akt_NormOMeanRep_all %>% 
+#   filter(!(Gel == "Gel22" & Cell_line == "XO" & Treatment == 0 & Replicate == "R1")) # To filter out the common samples that were added only for normalization
+# In case of Gel 23, the other common sample intended already could not be used because of problem with two lanes.
+
+######### Normalization OVER MEAN SIGNAL per replicate #######
+
+#CTDR_Akt_NormOMeanRep <- Norm_o_MeanRep(CTDR_Akt_NormOCom)
+
+######## Fold change Over XX and Over resp Cntrl ##############
+
+CTDR_Akt_FC <- FC_Calculation_updated(CTDR_Akt_NormOMeanRep)
+
+CTDR_Akt_plot <- CTDR_Akt_FC %>% 
+  select(-c(Exp,Gel)) # You can remove whichever columns are not needed
+# select(-c(matches("totalP|TPS"))) %>% 
+# select(-c(matches("Norm_totalP|Norm_TPS")))
+
+```
+
+
+### RawValues_Normalization {.tabset .tabset-fade}
+
+Raw values : Phospho protein and total protein
+
+*In Gel23 , there are values for only 17 wells, because two lanes that had smears were not inluded. However the lane number is not corretly specified since, this plot was just an exploratory plot made for myself.*
+
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+########## Normalization over Common sample
+
+# Plot_RawValues(CTDR_Akt_NormOCom_all,
+#                Well_no,
+#                phosP,
+#                Mean_Com_phosP)
+# 
+# Plot_RawValues(CTDR_Akt_NormOCom_all,
+#                Well_no,
+#                totalP,
+#                Mean_Com_totalP)
+
+
+```
+
+Normalization : Over Common Sample and over mean of replicate    
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+########## Normalization over Common sample
+# 
+# Plot_NormValues_Check(CTDR_Akt_NormOCom_all,
+#                       Well_no,
+#                       phosP_Norm_oCom)
+
+
+########## Normalization over Mean 
+
+# Plot_NormValues_Check(CTDR_Akt_NormOMeanRep,
+#                       Well_no,
+#                       phosP_Norm_oMeanRep)
+
+
+```
+
+M1 and M2   
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+Plot_NormValues_Check(CTDR_Akt_NormOMeanRep,
+                      Well_no,
+                      Norm_phosP_by_total_M1)
+
+Plot_NormValues_Check(CTDR_Akt_NormOMeanRep,
+                      Well_no,
+                      Norm_phosP_by_total_M2)
+
+```
+
+### pAkt:NormOverAkt {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LINEAR) #########
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             Norm_phosP_by_total_M2)
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Unpaired <- compare_means(Norm_phosP_by_total_M2 ~ Cell_line,
+                                             data = CTDR_Akt_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             Norm_phosP_by_total_M2)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             Norm_phosP_by_total_M2)
+
+```
+
+
+#### M1
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LINEAR) #########
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             Norm_phosP_by_total_M1)
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+# Ttest_pAkt_CTDR_Unpaired <- compare_means(Norm_phosP_by_total_M1 ~ Cell_line,
+#                                              data = CTDR_Akt_plot,
+#                                              method = "t.test",
+#                                              paired = FALSE,
+#                                              group.by = c("Treatment"),
+#                                              ref.group = NULL)
+# 
+# kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+# Ttest_pAkt_CTDR_Paired <- compare_means(Norm_phosP_by_total_M1 ~ Cell_line,
+#                                            data = CTDR_Akt_plot,
+#                                            method = "t.test",
+#                                            paired = TRUE,
+#                                            group.by = c("Treatment"),
+#                                            ref.group = NULL)
+# 
+# kable(Ttest_pAkt_CTDR_Paired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             Norm_phosP_by_total_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             Norm_phosP_by_total_M1)
+
+```
+
+
+
+
+### pAkt_Akt:FC over XX {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              FCoXX_M2)
+
+##** Ribbon
+
+
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoXX_M2)
+
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Unpaired <- compare_means(FCoXX_M2 ~ Cell_line,
+                                             data = CTDR_Akt_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              FCoXX_M2)
+
+##** Ribbon
+
+
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoXX_M2)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              FCoXX_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoXX_M2)
+
+```
+
+
+#### M1
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoXX_M1)
+
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Unpaired <- compare_means(FCoXX_M1 ~ Cell_line,
+                                             data = CTDR_Akt_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Paired <- compare_means(FCoXX_M1 ~ Cell_line,
+                                           data = CTDR_Akt_plot,
+                                           method = "t.test",
+                                           paired = TRUE,
+                                           group.by = c("Treatment"),
+                                           ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Paired)
+```
+
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoXX_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoXX_M1)
+
+```
+
+
+
+### pAkt_Akt:FC over res cntrl {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoCntrl_M2)
+
+
+```
+
+
+**T-test:Unpaired**
+  This comparison gave an error because the control replicate values were 1 ??
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Unpaired <- compare_means(FCoCntrl_M2 ~ Cell_line,
+                                          data = CTDR_Akt_plot,
+                                          method = "t.test",
+                                          paired = FALSE,
+                                          group.by = c("Treatment"),
+                                          ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoCntrl_M2)
+
+```
+
+**Treatment Doses as Factors**   
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoCntrl_M2)
+
+```
+
+#### M1
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoCntrl_M1)
+
+
+```
+
+**T-test:Unpaired**
+  This comparison gave an error because the control replicate values were 1 ??
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Unpaired <- compare_means(FCoCntrl_M1 ~ Cell_line,
+                                          data = CTDR_Akt_plot,
+                                          method = "t.test",
+                                          paired = FALSE,
+                                          group.by = c("Treatment"),
+                                          ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pAkt_CTDR_Paired <- compare_means(FCoCntrl_M1 ~ Cell_line,
+                                           data = CTDR_Akt_plot,
+                                           method = "t.test",
+                                           paired = TRUE,
+                                           group.by = c("Treatment"),
+                                           ref.group = NULL)
+
+kable(Ttest_pAkt_CTDR_Paired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              log2Treatment,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoCntrl_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_Akt_plot,
+                              Treatment_Fctr,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_Akt_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoCntrl_M1)
+
+```
+
+
+## pP70s6k {.tabset .tabset-fade}
+
+**Gel3(R1), Gel19(R2) and Gel20(R3)**
+  
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+
+image_files = c("0001725_02_JuneGel3_CTDR_p70S6K.png","0000584_02_JuneGel3_CTDR_TPS.png")
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+knitr::include_graphics(file.path(image_folder,image_files[2]))
+
+image_files = c("0000044_02_JuneGel19_CTDR_p70S6K.png","0000048_02_JuneGel19_CTDR_TPS.png")
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+knitr::include_graphics(file.path(image_folder,image_files[2]))
+
+image_files = c("0000045_02_JuneGel20_CTDR_p70S6K.png","0000049_02_JuneGel20_CTDR_TPS.png")
+knitr::include_graphics(file.path(image_folder,image_files[1]))
+knitr::include_graphics(file.path(image_folder,image_files[2]))
+
+```
+
+**pP70s6k_TPS : Reading in Data, Normalization and FC calculation  **
+```{r echo=FALSE}
+
+#########  Gel1 : R1re  ######### 
+
+Gel3_samples = c(
+  "XX_R1_cntrl_CTDR",
+  "XX_R1_1.5_CTDR",
+  "XX_R1_3_CTDR",
+  "XX_R1_6_CTDR",
+  "XX_R1_12_CTDR",
+  "XX_R1_24_CTDR",
+  "XO_R1_cntrl_CTDR",
+  "XO_R1_1.5_CTDR",
+  "XO_R1_3_CTDR",
+  "XO_R1_6_CTDR",
+  "XO_R1_12_CTDR",
+  "XO_R1_24_CTDR"
+)
+
+Gel3_P70s6k_quant_file = c("0001725_02_JuneGel3_GSK3iDR_pP70S6k.xls")
+Gel3_P70s6kDB <-  read_excel(file.path(quant_folder,Gel3_P70s6k_quant_file))
+
+Gel3_TPS_file = "0000584_02_June2020_Gsk3iDR_R1trial_Gel3.xlsx"
+Gel3_TPS <- read_excel(file.path(empiria_2021_folder,Gel3_TPS_file))
+
+Gel3_P70s6kDB_labeled <- ReadInWBData_TPS(Gel3_samples, Gel3_P70s6kDB, Gel3_TPS,Gsk3inh_CT_Doses, "Gel3", "P70s6k")
+#Gel3_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel3_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
+
+Gel3_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel3_P70s6kDB_labeled)
+
+
+#########  Gel19 : R2 + R1XX(dropped)   #########  
+
+Gel19_samples = c(
+"XO_R1_cntrl_CTDR",
+"XX_R1_cntrl_CTDR",
+"XX_R1_1.5_CTDR",
+"XX_R1_3_CTDR",
+"XX_R1_6_CTDR",
+"XX_R1_12_CTDR",
+"XX_R1_24_CTDR",
+"XO_R2_cntrl_CTDR",
+"XO_R2_1.5_CTDR",
+"XO_R2_3_CTDR",
+"XO_R2_6_CTDR",
+"XO_R2_12_CTDR",
+"XO_R2_24_CTDR",
+"XX_R2_cntrl_CTDR",
+"XX_R2_1.5_CTDR",
+"XX_R2_3_CTDR",
+"XX_R2_6_CTDR",
+"XX_R2_12_CTDR",
+"XX_R2_24_CTDR")
+
+Gel19_P70s6k_quant_file = c("0000044_02_JuneGel19_GSK3bDR_p70Rsk.xls")
+Gel19_P70s6kDB <-  read_excel(file.path(quant_folder,Gel19_P70s6k_quant_file))
+
+Gel19_TPS_file = "0000048_02_Gel19_GSK3iDR2_R1XX_TPS.xlsx"
+Gel19_TPS <- read_excel(file.path(empiria_folder,Gel19_TPS_file))
+
+Gel19_P70s6kDB_labeled <- ReadInWBData_TPS(Gel19_samples, Gel19_P70s6kDB, Gel19_TPS,Gsk3inh_CT_Doses, "Gel19", "P70s6k")
+
+# Removing replicate 1, now that I have a new dataset fro that replicate
+Gel19_P70s6kDB_labeled <- Gel19_P70s6kDB_labeled %>% 
+  filter(Replicate != "R1")
+
+#Gel19_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel19_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+
+Gel19_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel19_P70s6kDB_labeled)
+
+
+#########  Gel20 : R3 + R1XO(dropped)    #########  
+
+Gel20_samples = c(
+"XX_R1_cntrl_CTDR",
+"XO_R1_cntrl_CTDR",
+"XO_R1_1.5_CTDR",
+"XO_R1_3_CTDR",
+"XO_R1_6_CTDR",
+"XO_R1_12_CTDR",
+"XO_R1_24_CTDR",
+"XX_R3_cntrl_CTDR",
+"XX_R3_1.5_CTDR",
+"XX_R3_3_CTDR",
+"XX_R3_6_CTDR",
+"XX_R3_12_CTDR",
+"XX_R3_24_CTDR",
+"XO_R3_cntrl_CTDR",
+"XO_R3_1.5_CTDR",
+"XO_R3_3_CTDR",
+"XO_R3_6_CTDR",
+"XO_R3_12_CTDR",
+"XO_R3_24_CTDR")
+
+Gel20_P70s6k_quant_file = c("0000045_02_JuneGel20_GSK3bDR_p70Rsk.xls")
+Gel20_P70s6kDB <-  read_excel(file.path(quant_folder,Gel20_P70s6k_quant_file))
+
+Gel20_TPS_file = "0000049_02_Gel20_GSK3iDR3_R1XO_TPS.xlsx"
+Gel20_TPS <- read_excel(file.path(empiria_folder,Gel20_TPS_file))
+
+Gel20_P70s6kDB_labeled <- ReadInWBData_TPS(Gel20_samples, Gel20_P70s6kDB, Gel20_TPS, Gsk3inh_CT_Doses, "Gel20", "P70s6k")
+
+Gel20_P70s6kDB_labeled <- Gel20_P70s6kDB_labeled %>% 
+  filter(Replicate != "R1")
+
+#Gel20_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel20_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+
+Gel20_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel20_P70s6kDB_labeled)
+
+
+
+#########  Collate the 3 REPLICATES #####
+
+# CTDR_P70s6k_NormOCom_all <- dplyr::bind_rows(Gel19_P70s6kDB_NormOCom, Gel20_P70s6kDB_NormOCom) 
+# CTDR_P70s6k_NormOCom <-   CTDR_P70s6k_NormOCom_all %>% 
+#   filter(Well_no!=1) # To filter out the common samples that were added only for normalization
+
+######### Normalization OVER MEAN SIGNAL per replicate #######
+
+CTDR_P70s6k_NormOMeanRep <- dplyr::bind_rows(Gel3_P70s6k_NormOMeanRep,Gel19_P70s6k_NormOMeanRep,Gel20_P70s6k_NormOMeanRep)
+
+######## Fold change Over XX and Over resp Cntrl ##############
+
+CTDR_P70s6k_FC <- FC_Calculation_updated(CTDR_P70s6k_NormOMeanRep)
+
+CTDR_P70s6k_plot <- CTDR_P70s6k_FC %>% 
+    select(-c(Exp,Gel)) # You can remove whichever columns are not needed
+
+#  select(-c(Exp,Gel,Mean_Com_phosP,Mean_Com_totalP)) # You can remove whichever columns are not needed
+# select(-c(matches("totalP|TPS"))) %>% 
+# select(-c(matches("Norm_totalP|Norm_TPS")))
+
+```
+
+
+### RawValues_Normalization {.tabset .tabset-fade}
+
+Raw values : Phospho protein and total protein
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+########## Normalization over Common sample
+
+# Plot_RawValues(CTDR_P70s6k_NormOCom_all,
+#                Well_no,
+#                phosP,
+#                Mean_Com_phosP)
+# 
+# Plot_RawValues(CTDR_P70s6k_NormOCom_all,
+#                Well_no,
+#                totalP,
+#                Mean_Com_totalP)
+
+
+```
+
+Normalization : Over Common Sample and over mean of replicate 
+
+For "Over Common Sample" : There were two samples that were on both gels(19 and 20). These were the untreated controls of both XX and XO cell line of Replicate1. So the mean of these common samples was used for normalization.
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+########## Normalization over Common sample
+
+# Plot_NormValues_Check(CTDR_P70s6k_NormOCom_all,
+#                       Well_no,
+#                       phosP_Norm_oCom)
+# 
+# 
+# ########## Normalization over Mean 
+# 
+# Plot_NormValues_Check(CTDR_P70s6k_NormOMeanRep,
+#                       Well_no,
+#                       phosP_Norm_oMeanRep)
+
+
+```
+
+M1 and M2   
+
+```{r message = FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+Plot_NormValues_Check(CTDR_P70s6k_NormOMeanRep,
+                      Well_no,
+                      Norm_phosP_by_total_M1)
+
+Plot_NormValues_Check(CTDR_P70s6k_NormOMeanRep,
+                      Well_no,
+                      Norm_phosP_by_total_M2)
+
+```
+
+### pP70s6k:NormOverP70s6k {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LINEAR) #########
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             Norm_phosP_by_total_M2)
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(Norm_phosP_by_total_M2 ~ Cell_line,
+                                             data = CTDR_P70s6k_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             Norm_phosP_by_total_M2)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              Norm_phosP_by_total_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             Norm_phosP_by_total_M2)
+
+```
+
+
+#### M1
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LINEAR) #########
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             Norm_phosP_by_total_M1)
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(Norm_phosP_by_total_M1 ~ Cell_line,
+                                             data = CTDR_P70s6k_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Paired <- compare_means(Norm_phosP_by_total_M1 ~ Cell_line,
+                                           data = CTDR_P70s6k_plot,
+                                           method = "t.test",
+                                           paired = TRUE,
+                                           group.by = c("Treatment"),
+                                           ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Paired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             Norm_phosP_by_total_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              Norm_phosP_by_total_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             Norm_phosP_by_total_M1)
+
+```
+
+
+
+
+### pP70s6k_TPS:FC over XX {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              FCoXX_M2)
+
+##** Ribbon
+
+
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoXX_M2)
+
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(FCoXX_M2 ~ Cell_line,
+                                             data = CTDR_P70s6k_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              FCoXX_M2)
+
+##** Ribbon
+
+
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoXX_M2)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              FCoXX_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoXX_M2)
+
+```
+
+
+#### M1
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoXX_M1)
+
+
+```
+
+**T-test:Unpaired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(FCoXX_M1 ~ Cell_line,
+                                             data = CTDR_P70s6k_plot,
+                                             method = "t.test",
+                                             paired = FALSE,
+                                             group.by = c("Treatment"),
+                                             ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Paired <- compare_means(FCoXX_M1 ~ Cell_line,
+                                           data = CTDR_P70s6k_plot,
+                                           method = "t.test",
+                                           paired = TRUE,
+                                           group.by = c("Treatment"),
+                                           ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Paired)
+```
+
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoXX_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              FCoXX_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoXX_M1)
+
+```
+
+
+
+### pP70s6k_TPS:FC over res cntrl {.tabset .tabset-fade}
+#### M2
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoCntrl_M2)
+
+
+```
+
+
+**T-test:Unpaired**
+  This comparison gave an error because the control replicate values were 1 ??
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(FCoCntrl_M2 ~ Cell_line,
+                                          data = CTDR_P70s6k_plot,
+                                          method = "t.test",
+                                          paired = FALSE,
+                                          group.by = c("Treatment"),
+                                          ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoCntrl_M2)
+
+```
+
+**Treatment Doses as Factors**   
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              FCoCntrl_M2)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoCntrl_M2)
+
+```
+
+#### M1
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment,
+             FCoCntrl_M1)
+
+
+```
+
+**T-test:Unpaired**
+  This comparison gave an error because the control replicate values were 1 ??
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Unpaired <- compare_means(FCoCntrl_M1 ~ Cell_line,
+                                          data = CTDR_P70s6k_plot,
+                                          method = "t.test",
+                                          paired = FALSE,
+                                          group.by = c("Treatment"),
+                                          ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Unpaired)
+```
+
+**T-test:Paired**
+```{r message = FALSE, warning=FALSE}
+Ttest_pP70s6k_CTDR_Paired <- compare_means(FCoCntrl_M1 ~ Cell_line,
+                                           data = CTDR_P70s6k_plot,
+                                           method = "t.test",
+                                           paired = TRUE,
+                                           group.by = c("Treatment"),
+                                           ref.group = NULL)
+
+kable(Ttest_pP70s6k_CTDR_Paired)
+```
+
+
+**Treatment Dose in Log2 scale**
+  log2(Treatment+1)
+
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+################ DOSES: NUMERIC(LOG) #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              log2Treatment,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             log2Treatment,
+             FCoCntrl_M1)
+
+```
+
+**Treatment Doses as Factors**
+  
+```{r echo=FALSE, out.width=c(400,400), fig.height=5, fig.show='hold'}
+
+################ DOSES: AS FACTORS #########
+
+##** Replicate points
+Plot_ReplicatePoints_MeanLine(CTDR_P70s6k_plot,
+                              Treatment_Fctr,
+                              FCoCntrl_M1)
+
+##** Ribbon
+Plot_Ribbons(CTDR_P70s6k_plot,
+             Gsk3inh_CT_Doses,
+             Treatment_Fctr,
+             FCoCntrl_M1)
+
+```
+
+
+
+## WritingCSV
+```{r}
+write.csv(CTDR_Akt_FC, file = "OutputFiles/CTDR_Akt_FC.csv")
+write.csv(CTDR_P70s6k_FC, file = "OutputFiles/CTDR_P70s6k_FC.csv")
+```
+
+## PaperFigures
+
+I am using the WB imgaes from R3, 
+
+* for pAkt+ Akt : Gel 23 : 0000063_02_JuneGel23_CTDR_Aktp.png   
+* for p70Rsk + TPS : Gel 20 : 0000045_02_JuneGel20_CTDR_p70S6K.png
+
+```{r}
+
+CTDR_All <- dplyr::full_join(CTDR_Akt_plot, CTDR_P70s6k_plot, by=c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr"), suffix = c("_Akt", "_P70s6k"))
+
+CTDR_All <- CTDR_All %>%
+  select(-c(grep("Analyte", colnames(CTDR_All))))
+
+CTDR_All$Cell_line <- factor(CTDR_All$Cell_line, levels = c("XX", "XO", "nn"))
+
+CTDR_Allplot <- CTDR_All %>% 
+  select(c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr",grep("FCoXX_M2",colnames(CTDR_All)))) %>% 
+  gather(key = "Analyte", value = "Signal", -c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr"))
+
+Analyte_labels <- c("FCoXX_M2_Akt" = "pAkt", "FCoXX_M2_P70s6k" = "pP70s6k")
+
+#### Setting up the plotting attributes ###
+# MyCellLineColours <- c("XX" = "#FF0000", "XO" = "#0000CD", "nn" = "#000005")
+# MyReplicateShapes <-  c("R1" = 2, "R2" = 0, "R3" = 6, "nn"= 4)
+
+g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
+  labs(x = "\nGsk3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
+       y = "Rel. phosp. (norm.)\n",
+       color = "Cell line" )  # color within labs,lets me give user defined labels to the attribute in legend
+  
+
+gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
+grid.arrange(gt)
+ggsave("CTDR_pAkt_pP70s6k_FCoXX_s15.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OutputFiles") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
+
+
+
+```
+
+
+
+
+
+
