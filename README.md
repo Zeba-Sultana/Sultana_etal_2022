@@ -14,22 +14,22 @@ The following steps can be followed sequentially for the complete analysis and t
 
 **Step3 :** Merging the fold change data from from the two Assays and preparation of the combined MIDAS files that are used as input to STASNet for modeling.
 
-**Step4 : **Building the model and network extension that resulted in addition of 10 links.
+**Step4 :** Building the model and network extension that resulted in addition of 10 links.
 
 **Step5 :** Profile Likelihood analysis to compute confidence interval for the model parameters.
 
 **Step6 :** Comparing the experimental data with simulation results from the initial network model and the completed network model.
 
-**Step 7: **Analysis of results from validation experiments.
+**Step 7:** Analysis of results from validation experiments.
 
 Each of the subfolders have their readme files that provides further details on that step.
 
 The entire analysis can also be run using the script provided in this folder "Script_AllSteps", which moves into these folders and executes the required scripts sequentially. 
 
-Note :
+Note :   
 1.) In the perturbation experiments, the replicates have been referred to as R3,R4 and R5 for all the preprocessing steps.(The first two replicates of these experiments were not used). These correspond to replicates Rep1 , Rep2 and Rep3 in the paper.
 
-2.) The output from scripts is saved into folders called OUTPUT or OUTPUT_PAPER.
-OUTPUT : Has outputs that are used by later scripts.
+2.) The output from scripts is saved into folders called OUTPUT or OUTPUT_PAPER.   
+OUTPUT : Has outputs that are used by later scripts.   
 OUTPUT_PAPER : Has output(Figures or Supplementary Tables) that is part of the paper. Also has the correct replicate number annotation as used in the paper.
 
