@@ -28,14 +28,7 @@ The input files being used for the Replicates3/4 are different from that of repl
 
 2.) extract_lxb_data.R : A script which contains the definitions of functions required for this process.
 
-3.) The output from the Bioplex machine(Magpix) are in the form of lxb files in “lxb” folder.
--replicates 3 and 4 lxb files are at :
-/project/ag_schulz/Zeba/ALL_RAW_DATA/LuminexAssays/BIOPLEX_RESULTS_JAN2017_R_3_4/
-
--replicates 5 lxb files are at :
-/project/ag_schulz/Zeba/ALL_RAW_DATA/LuminexAssays/BIOPLEX_R5_MILLIPORE_R3_4_5_OCT2017/
-Folders of interest are 171012_Zeba_XO_5_lxb and 171012_Zeba_XX_5_lxb
-The remaining are output from a Millipore assay that was also done at the same time.
+3.) The output from the Bioplex machine(Magpix) are in the form of lxb files in “lxb” folder @ ../RAW_DATA/BioplexLysates_LUMINEX
 
 4.) Files required to pull information on the Bioplex assay plate layout:
 *********************************************************
@@ -59,13 +52,8 @@ INPUTfiles_BioplexR3_R4 : Folder with files specific for replicate 3 and 4 lxb f
 INPUTfiles_BioplexR5 : Folder with files specific for replicate 5 lxb files
 (Plate_Layout_BioRad_R5.xls and extract_experiment_annotations_R5.R)
 
-5.) An output folder for each replicate is created.(Name of the folder is name of the input lxb folder sans the _lxb suffix). 3 files are generated and placed in this folder :
 
-beads_distribution_XO3.pdf : It plots the distribution of fluorescence intensities.
-blunt_XO3_MIDAS.csv : This is the median Fluorescence intensity values, as a MIDAS file. This is used further for the model development.
-blunt_XO3_MIDAS.var : This file was not used. This is important when experimental noise is more than the biological noise OR when a user defined error model needs to be used.
-
-6.) OUTPUT : All the MIDAS files (which will be needed for model input) are copied into one folder called OUTPUT_MIDASfiles and are renamed for consistent nomenclature. 
+5.) OUTPUT : All the MIDAS files (which will be needed for model input) are copied into one folder called OUTPUT_MIDASfiles and are renamed for consistent nomenclature. 
 
 
 
