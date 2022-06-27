@@ -116,27 +116,27 @@ ggsave("Fig7H_PDDR_XX_XO_compared_pMek_FC_NEW.pdf", gt, dpi=300, useDingbats=FAL
 
 ####### FC compared : previous #########
 
-PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek <- PDDR_All_MekTPSplot_ComparativeFC_subset_Mek %>% 
+PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek <- PDDR_All_MekTPSplot_ComparativeFC_subset_Mek %>%
   filter(!(Cell_line == "XO" & Treatment == 0))
 
-g <- ggplot(PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek, aes(x=x_axis_factor, y=Comparative_FC))+
-  #geom_point(alpha = 0.8,aes(x=x_axis_factor,y=Comparative_FC,color=Cell_line))+
-  geom_point(aes(x=x_axis_factor,y=Comparative_FC,color=Cell_line))+
-  scale_fill_manual(values = MyCellLineColours) +
-  scale_color_manual(values = MyCellLineColours) +
-  ylim(0,max(PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek$Comparative_FC+2))+
-  #facet_grid(~Cell_line, space = "free",scales = "free", switch = "x")+
-  stat_summary(fun = mean,geom = "crossbar", size = 0.1, position = position_dodge(width = 1))+
-  labs(x = "\n MEKi(nM)", #\u03bc is the unicode charachter fro greek
-       y = " pMEK ",
-       title = "Fold change",
-       color = "Cell line" )+
-  MyPaperTheme
-
-gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
-grid.arrange(gt)
-ggsave("PDDR_XX_XO_compared_pMek_FoldIncrease_updated_small.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
-
+# g <- ggplot(PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek, aes(x=x_axis_factor, y=Comparative_FC))+
+#   #geom_point(alpha = 0.8,aes(x=x_axis_factor,y=Comparative_FC,color=Cell_line))+
+#   geom_point(aes(x=x_axis_factor,y=Comparative_FC,color=Cell_line))+
+#   scale_fill_manual(values = MyCellLineColours) +
+#   scale_color_manual(values = MyCellLineColours) +
+#   ylim(0,max(PDDR_All_MekTPSplot_ComparativeFC_subset_noXO0_Mek$Comparative_FC+2))+
+#   #facet_grid(~Cell_line, space = "free",scales = "free", switch = "x")+
+#   stat_summary(fun = mean,geom = "crossbar", size = 0.1, position = position_dodge(width = 1))+
+#   labs(x = "\n MEKi(nM)", #\u03bc is the unicode charachter fro greek
+#        y = " pMEK ",
+#        title = "Fold change",
+#        color = "Cell line" )+
+#   MyPaperTheme
+# 
+# gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
+# grid.arrange(gt)
+# ggsave("PDDR_XX_XO_compared_pMek_FoldIncrease_updated_small.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
+# 
 
 
   
@@ -224,41 +224,41 @@ PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Treatment_Fctr = factor(PDDR_All_MekTPSp
 
 ############ FOLD CHANGE over respective control ###########
 
-PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor <- paste0(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Cell_line,":",PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Treatment_Fctr)
-PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor <- factor(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor, 
-                                                                levels = c("XX:0",
-                                                                           "XX:1000",
-                                                                           "XO:0",
-                                                                           "XO:4",
-                                                                           "XO:12",
-                                                                           "XO:1000"),
-                                                                labels = c("XX:0",
-                                                                           "XX:1000",
-                                                                           "0",
-                                                                           "4",
-                                                                           "12",
-                                                                           "1000"))
+# PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor <- paste0(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Cell_line,":",PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Treatment_Fctr)
+# PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor <- factor(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$x_axis_factor, 
+#                                                                 levels = c("XX:0",
+#                                                                            "XX:1000",
+#                                                                            "XO:0",
+#                                                                            "XO:4",
+#                                                                            "XO:12",
+#                                                                            "XO:1000"),
+#                                                                 labels = c("XX:0",
+#                                                                            "XX:1000",
+#                                                                            "0",
+#                                                                            "4",
+#                                                                            "12",
+#                                                                            "1000"))
 
-g <-ggplot(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek, aes(x=x_axis_factor,y=Signal)) +
-  geom_point(aes(x=x_axis_factor,y=Signal,color=Cell_line))+
-  #geom_text(position = position_dodge(width = 1), aes(x=x_axis_factor, y=-5))+
-  scale_fill_manual(values = MyCellLineColours) +
-  scale_color_manual(values = MyCellLineColours) +
-  #facet_grid(~Cell_line, space = "free",scales = "free", switch = "x")+
-  stat_summary(fun = mean,geom = "crossbar", size = 0.1, position = position_dodge(width = 1))+
-  ylim(0,max(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Signal)+2)+
-  labs(x = "\n MEKi(nM)", #\u03bc is the unicode charachter fro greek
-       y = " pMEK : Fold change ",
-       title = "MEK inhibitor dose response",
-       color = "Cell line" )+
-  MyPaperTheme
-  #+theme(axis.text.x=element_blank())
-  # scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-  # NULL
-
-gt=set_panel_size(g,width=unit(4.5,'cm'),height=unit(2.8,'cm'))
-grid.arrange(gt)
-ggsave("PDDR_XX_XO_compared_pMek_FoldIncrease.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
+# g <-ggplot(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek, aes(x=x_axis_factor,y=Signal)) +
+#   geom_point(aes(x=x_axis_factor,y=Signal,color=Cell_line))+
+#   #geom_text(position = position_dodge(width = 1), aes(x=x_axis_factor, y=-5))+
+#   scale_fill_manual(values = MyCellLineColours) +
+#   scale_color_manual(values = MyCellLineColours) +
+#   #facet_grid(~Cell_line, space = "free",scales = "free", switch = "x")+
+#   stat_summary(fun = mean,geom = "crossbar", size = 0.1, position = position_dodge(width = 1))+
+#   ylim(0,max(PDDR_All_MekTPSplot_FCoCntrl_subset_Mek$Signal)+2)+
+#   labs(x = "\n MEKi(nM)", #\u03bc is the unicode charachter fro greek
+#        y = " pMEK : Fold change ",
+#        title = "MEK inhibitor dose response",
+#        color = "Cell line" )+
+#   MyPaperTheme
+#   #+theme(axis.text.x=element_blank())
+#   # scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+#   # NULL
+# 
+# gt=set_panel_size(g,width=unit(4.5,'cm'),height=unit(2.8,'cm'))
+# grid.arrange(gt)
+# ggsave("PDDR_XX_XO_compared_pMek_FoldIncrease.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
 
 print("Script 3 executed : Scatter plots saved")
 
