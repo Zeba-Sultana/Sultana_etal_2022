@@ -21,9 +21,11 @@ Step 1B :
 2.) Use the $mismatch from the output of plotModelAccuracy function for the final/completed models
 3.) Combine the two and save as Mismatch_DATA.csv in the OUTPUT folder
 
-########## Step 2 : Plot Heatmaps ######
+########## Step 2 : Plot Heatmaps : Fig 3A, 1C ######
 
-
+1.) Read in the experimental data and results from the simulation of initial and final models.
+2.) Create 11*11 matrix to accomodate resulst of DMSO,10 treatments and their combinations. The lower triangle of this matrox gets data from XX and the upper triangle gets data from XO. Thre such matroces are made : one each for exp data, initial model and completed model simulations.
+3.) Plot heatmaps for Fig3A and Fig1C using custom functions.
 
 
 ########## Step 3 : Plot PointRange plots ######
