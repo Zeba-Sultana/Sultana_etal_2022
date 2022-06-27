@@ -1,0 +1,20 @@
+NoLif	Lifr
+Lifr	Jak
+Jak	Stat3
+Bmp4	Bmp4r
+Bmp4r	Smad1
+Igfr	Pi3k
+Pi3k	Akt
+Akt	Gsk3
+Akt	mTor
+Fgf4	Fgfr
+Fgfr	Pi3k
+Fgfr	Ras
+Ras	Raf
+Raf	Mek
+Mek	Erk
+Activin Actr
+Actr	Smad2
+
+
+
