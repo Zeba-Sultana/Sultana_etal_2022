@@ -1,0 +1,274 @@
+#!/usr/bin/env Rscript
+
+library(readxl)
+library(openxlsx)
+library(dplyr)
+library(STASNet)
+
+dir.create("OUTPUT")
+dir.create("OUTPUT_PAPER")
+
+
+###### Functions 
+#Subsets the data -> changes to matrix -> gives treatment column to rownames ->drops other annotation columns.
+FC_2_MIDAS <- function(FC_data,the_x_status,replicate_no){
+  FC_data_sub <- FC_data %>% 
+    filter(Replicate == replicate_no & x_status == the_x_status)
+  
+  FC_data_sub <- as.matrix(FC_data_sub)
+  row.names(FC_data_sub) <- FC_data_sub[,"Treatment"]
+  drop_cols <- c("Treatment","x_status","Replicate","GEL_Number")
+  FC_data_sub <- FC_data_sub[,!(colnames(FC_data_sub) %in% drop_cols )]
+  
+  return(FC_data_sub)
+  
+}
+
+#Since there are different number of controls in the Bioplex and WB data, first the treatment and control rows are separated. Treatment rows are easily merged. But for control rows, I check which one has more rows, make the other one of equal size by filling in with NA rows and then merge them.
+#Lastly I drop the bioplex analytes that did not give correct signal on R3 and R4 (such as p38 etc)
+Merge_Bioplex_WB_MIDAS <- function(Bioplex_MIDAS,WB_MIDAS){
+  
+  # Bioplex_MIDAS <- R5_XX_Bioplex_MIDAS_Norm
+  # WB_MIDAS <- R5_XX_WB_MIDAS
+  
+  
+  Bioplex_MIDAS <- as.data.frame(Bioplex_MIDAS)
+  WB_MIDAS <- as.data.frame(WB_MIDAS)
+  
+  #Separating the control and treatment rows of MIDAS files
+  Bioplex_control <- Bioplex_MIDAS %>%
+    filter(ID.type == "c" | ID.type == "control")
+  Bioplex_treatment <- Bioplex_MIDAS %>%
+    filter(ID.type != "c" & ID.type != "control")
+  
+  WB_control <- WB_MIDAS %>%
+    filter(ID.type == "c" | ID.type == "control")
+  WB_treatment <- WB_MIDAS %>%
+    filter(ID.type != "c" & ID.type != "control")
+  
+  #Merging the treatment rows
+  #Merge_treatment_data(Bioplex_treatment,WB_treatment)
+  Merge_treatment_data<- function(df1, df2){
+    
+    df1 <- Bioplex_treatment
+    df2 <- WB_treatment
+    
+    df1 <- df1 %>% filter(ID.type != "blank")
+    df2 <- df2 %>% filter(ID.type != "blank")
+    
+    drop_IDtype <- c("ID.type")
+    
+    df1 <- df1[,!(colnames(df1) %in% drop_IDtype)]
+    df2 <- df2[,!(colnames(df2) %in% drop_IDtype)]
+    
+    
+    #sharedColNames <- names(df1)[names(df1) %in% names(df2)]
+    sharedColNames <- colnames(df1)[colnames(df1) %in% colnames(df2)]
+
+    df12 <- left_join(df1,df2)
+    my_col_name_vector <- colnames(df12)
+    df12[,"ID.type"] <- rep("t",nrow(df12))
+    df12 <- df12[,c("ID.type",my_col_name_vector)]
+    
+    return(df12)
+    
+  }
+  Merged_treatment <- Merge_treatment_data(Bioplex_treatment,WB_treatment)
+  
+  
+  padNA_for_cbind <- function(df_a,df_b){
+    df_a <- WB_control
+    df_b <- Bioplex_control
+    nrow(df_a)
+    nrow(df_b)
+    
+    if(nrow(df_a) > nrow(df_b)){
+      long_df <- df_a
+      short_df <- df_b
+      
+      rowsneeded <- nrow(long_df) - nrow(short_df)
+      temp1 = colnames(short_df)
+      temp2 = setNames(data.frame(matrix(rep(NA, length(temp1) * rowsneeded),ncol = length(temp1))), temp1)
+      short_df <- rbind(short_df,temp2)
+      
+      df_b <- short_df
+      
+    }else if (nrow(df_b) > nrow(df_a)) {
+      long_df <- df_b
+      short_df <- df_a
+      
+      rowsneeded <- nrow(long_df) - nrow(short_df)
+      temp1 = colnames(short_df)
+      temp2 = setNames(data.frame(matrix(rep(NA, length(temp1) * rowsneeded),ncol = length(temp1))), temp1)
+      short_df <- rbind(short_df,temp2)
+      
+      df_a <- short_df
+      
+    } else {
+      df_a <- df_a
+      df_b <- df_b
+    }
+    
+    df_a$ID.type <- rep("c",nrow(df_a))
+    df_a$DA.ALL <-  rep(0,nrow(df_a)) 
+    df_a <- df_a %>% mutate_at(.vars = vars(contains('TR.')),
+                               .funs = funs(replace(., is.na(.), 0)))
+    
+    df_b$ID.type <- rep("c",nrow(df_b))
+    df_b$DA.ALL <-  rep(0,nrow(df_b)) 
+    df_b <- df_b %>% mutate_at(.vars = vars(contains('TR.')),
+                               .funs = funs(replace(., is.na(.), 0)))
+    
+    my_dfs <- list(df_a,df_b)
+    return(my_dfs)
+  }
+  
+  WB_control_NA <- padNA_for_cbind(WB_control,Bioplex_control)[[1]]
+  Bioplex_control_NA <- padNA_for_cbind(WB_control,Bioplex_control)[[2]]
+  
+  sharedColNames <- colnames(WB_control)[colnames(WB_control) %in% colnames(Bioplex_control)]
+  WB_control_NA <- WB_control_NA[,!(colnames(WB_control_NA) %in% sharedColNames)]
+  
+  Merged_control <- cbind(Bioplex_control_NA,WB_control_NA)
+  
+  
+  all_Merged_data <- rbind(Merged_control,Merged_treatment)
+  
+  Merged_MIDAS_dropcols <- c("DV.Smad2","DV.p38","DV.Erk","DV.Src","DV.Stat3","DV.Pi3kp85","DV.cJun","DV.GAPDH")
+  all_Merged_data <- all_Merged_data[,!(colnames(all_Merged_data) %in% Merged_MIDAS_dropcols)]
+  
+  colnames(all_Merged_data) <- gsub("ERKp","Erk", colnames(all_Merged_data))
+  colnames(all_Merged_data) <- gsub("STAT3p","Stat3", colnames(all_Merged_data))
+  colnames(all_Merged_data) <- gsub("SMAD2p","Smad2", colnames(all_Merged_data))
+  
+  return(all_Merged_data)
+}
+
+
+###### Reading in the normalized Fold change data for WB and Bioplex
+
+BP_Normalized_folder <- "../2A_Bioplex_Norm_FoldChange/OUTPUT"
+#BP_Normalized_folder <- "/project/ag_schulz/Zeba/SCRIPTS_Sultana_etal_2021/PS2A_BP_Norm_FC/OUTPUT"
+BP_FC_STASNet <- openxlsx::read.xlsx(file.path(BP_Normalized_folder,"Bioplex_FC_STASNet.xlsx"))
+
+WB_Normalized_folder <- "../2B_WB_Norm_FoldChange/OUTPUT"
+#WB_Normalized_folder <- "/project/ag_schulz/Zeba/SCRIPTS_Sultana_etal_2021/PS2B_WB_Norm_FC/OUTPUT"
+WBN2_GelMean_Norm_FC <- openxlsx::read.xlsx(file.path(WB_Normalized_folder,"WBN2_GelMean_Norm_FC_Statsnet.xlsx"))
+
+
+####### Processing Bioplex data
+
+BP_FC_STASNet$Treatment <- gsub(" ","",BP_FC_STASNet$Treatment)
+BP_FC_STASNet$Treatment <- gsub("c.\\d+","c",BP_FC_STASNet$Treatment) # To remove the .numbers[1:8] that had been addeded to rownames in case of "control" rows using make.names(unique=TRUE) because rownames could not be duplicated.
+
+#Removing XX5 and XO4 Akt readings and replacing with NA
+BP_FC_STASNet$Akt[BP_FC_STASNet$Replicate == "R5" & BP_FC_STASNet$x_status == "XX"] <- NA
+BP_FC_STASNet$Akt[BP_FC_STASNet$Replicate == "R4" & BP_FC_STASNet$x_status == "XO"] <- NA
+
+
+#Bioplex XX replicates
+BP_XX_R3 <- FC_2_MIDAS(BP_FC_STASNet,"XX","R3")
+BP_XX_R3_MIDAS <- STASNet:::midasFromData(BP_XX_R3,'BP_XX_R3_MIDAS.csv')
+colnames(BP_XX_R3_MIDAS) <- gsub(":",".",colnames(BP_XX_R3_MIDAS))
+
+BP_XX_R4 <- FC_2_MIDAS(BP_FC_STASNet,"XX","R4")
+BP_XX_R4_MIDAS <- STASNet:::midasFromData(BP_XX_R4,'BP_XX_R4_MIDAS.csv')
+colnames(BP_XX_R4_MIDAS) <- gsub(":",".",colnames(BP_XX_R4_MIDAS))
+
+BP_XX_R5 <- FC_2_MIDAS(BP_FC_STASNet,"XX","R5")
+BP_XX_R5_MIDAS <- STASNet:::midasFromData(BP_XX_R5,'BP_XX_R5_MIDAS.csv')
+colnames(BP_XX_R5_MIDAS) <- gsub(":",".",colnames(BP_XX_R5_MIDAS))
+
+
+#Bioplex XO replicates                                                                
+BP_XO_R3 <- FC_2_MIDAS(BP_FC_STASNet,"XO","R3") 
+BP_XO_R3_MIDAS <- STASNet:::midasFromData(BP_XO_R3,'BP_XO_R3_MIDAS.csv')
+colnames(BP_XO_R3_MIDAS) <- gsub(":",".",colnames(BP_XO_R3_MIDAS))
+
+BP_XO_R4 <- FC_2_MIDAS(BP_FC_STASNet,"XO","R4")
+BP_XO_R4_MIDAS <- STASNet:::midasFromData(BP_XO_R4,'BP_XO_R4_MIDAS.csv')
+colnames(BP_XO_R4_MIDAS) <- gsub(":",".",colnames(BP_XO_R4_MIDAS))
+
+BP_XO_R5 <- FC_2_MIDAS(BP_FC_STASNet,"XO","R5")
+BP_XO_R5_MIDAS <- STASNet:::midasFromData(BP_XO_R5,'BP_XO_R5_MIDAS.csv')
+colnames(BP_XO_R5_MIDAS) <- gsub(":",".",colnames(BP_XO_R5_MIDAS))
+
+
+####### Processing Western Blot data
+
+WBN2_GelMean_Norm_FC$Treatment <- gsub("Bmp4i","Bmp4ri",WBN2_GelMean_Norm_FC$Treatment)
+WBN2_GelMean_Norm_FC$Treatment <- gsub("Gsk3bi","Gsk3i",WBN2_GelMean_Norm_FC$Treatment)
+#These are names that I decided to correct later . Did not need to do it in BP data at this level, because for BP data I already do it at the time of MIDAS file creation from lxb data - in the "extract_experimental_annotations.R"
+#I had also corrected "Fgf4i" to "Fgfri" in that file for BP. This annotation was already correct in case of WB labelling
+
+WBN2_GelMean_Norm_FC <- WBN2_GelMean_Norm_FC %>% filter(Treatment !="Common")
+colnames(WBN2_GelMean_Norm_FC) <- gsub("_FC","",colnames(WBN2_GelMean_Norm_FC))
+WBN2_GelMean_Norm_FC <- WBN2_GelMean_Norm_FC %>% 
+  select(-GAPDH)
+
+#WesternBlot XX replicates
+WB_XX_R3 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XX","R3")
+WB_XX_R3_MIDAS <- STASNet:::midasFromData(WB_XX_R3,'WB_XX_R3_MIDAS.csv')
+colnames(WB_XX_R3_MIDAS) <- gsub(":",".",colnames(WB_XX_R3_MIDAS))
+
+WB_XX_R4 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XX","R4")
+WB_XX_R4_MIDAS <- STASNet:::midasFromData(WB_XX_R4,'WB_XX_R4_MIDAS.csv')
+colnames(WB_XX_R4_MIDAS) <- gsub(":",".",colnames(WB_XX_R4_MIDAS))
+
+WB_XX_R5 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XX","R5")
+WB_XX_R5_MIDAS <- STASNet:::midasFromData(WB_XX_R5,'WB_XX_R5_MIDAS.csv')
+colnames(WB_XX_R5_MIDAS) <- gsub(":",".",colnames(WB_XX_R5_MIDAS))
+
+
+#WesternBlot XO replicates
+WB_XO_R3 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XO","R3")
+WB_XO_R3_MIDAS <- STASNet:::midasFromData(WB_XO_R3,'WB_XO_R3_MIDAS.csv')
+colnames(WB_XO_R3_MIDAS) <- gsub(":",".",colnames(WB_XO_R3_MIDAS))
+
+WB_XO_R4 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XO","R4")
+WB_XO_R4_MIDAS <- STASNet:::midasFromData(WB_XO_R4,'WB_XO_R4_MIDAS.csv')
+colnames(WB_XO_R4_MIDAS) <- gsub(":",".",colnames(WB_XO_R4_MIDAS))
+
+WB_XO_R5 <- FC_2_MIDAS(WBN2_GelMean_Norm_FC,"XO","R5")
+WB_XO_R5_MIDAS <- STASNet:::midasFromData(WB_XO_R5,'WB_XO_R5_MIDAS.csv')
+colnames(WB_XO_R5_MIDAS) <- gsub(":",".",colnames(WB_XO_R5_MIDAS))
+
+
+## Merging_BP_WB_MIDAS
+
+XX_R3_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XX_R3_MIDAS,WB_XX_R3_MIDAS)
+XX_R4_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XX_R4_MIDAS,WB_XX_R4_MIDAS)
+XX_R5_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XX_R5_MIDAS,WB_XX_R5_MIDAS)
+
+XO_R3_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XO_R3_MIDAS,WB_XO_R3_MIDAS)
+XO_R4_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XO_R4_MIDAS,WB_XO_R4_MIDAS)
+XO_R5_BP_WB_Merged_MIDAS <- Merge_Bioplex_WB_MIDAS(BP_XO_R5_MIDAS,WB_XO_R5_MIDAS)
+
+### Output MIDAS 
+
+##XX
+XX_R345_BP_WB_Merged_MIDAS_AktFiltered <- rbind(XX_R3_BP_WB_Merged_MIDAS,XX_R4_BP_WB_Merged_MIDAS,XX_R5_BP_WB_Merged_MIDAS)
+XX_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered <- XX_R345_BP_WB_Merged_MIDAS_AktFiltered %>% 
+  select(-DV.bCatenin)
+
+write.csv(XX_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered, "./OUTPUT/XX_R345.csv")
+write.csv(XX_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered, "./OUTPUT_PAPER/Suppl_Table_S4_XX_MIDAS.csv")
+
+
+
+##XO
+
+XO_R345_BP_WB_Merged_MIDAS_AktFiltered <- rbind(XO_R3_BP_WB_Merged_MIDAS,XO_R4_BP_WB_Merged_MIDAS,XO_R5_BP_WB_Merged_MIDAS)
+XO_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered <- XO_R345_BP_WB_Merged_MIDAS_AktFiltered %>% 
+  select(-DV.bCatenin)
+
+write.csv(XO_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered, "./OUTPUT/XO_R345.csv")
+write.csv(XO_R345_BP_WB_Merged_MIDAS_bCateninNO_AktFiltered, "./OUTPUT_PAPER/Suppl_Table_S5_XO_MIDAS.csv")
+
+TEMP_FILES <- list.files(pattern = ".csv$")
+file.remove(TEMP_FILES)
+print("Temporary files deleted")
+print("Script3 :All steps executed ")
+
+
+
