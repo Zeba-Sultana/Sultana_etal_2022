@@ -1,5 +1,10 @@
 # Sultana_etal_2022 : The Impact Of Double X-Dosage On Signaling Pathways Implicated In Pluripotency
-Zeba Sultana, Mathurin Dorel, Bertram Klinger , Anja Sieber , Nils Blüthgen , Edda G. Schulz 
+Zeba Sultana(1), Mathurin Dorel(2), Bertram Klinger(2) , Anja Sieber(2) , Nils Blüthgen(2) , Edda G. Schulz(1)
+
+1 Regulatory Networks in Stem Cells, Max Planck Institute for Molecular Genetics, Berlin
+2 Computational Modelling in Medicine, Charite - Universitätsmedizin, Berlin 
+
+
 
 
 The complete analysis and all figures from the paper can be generated using the data and scripts in this repository.
