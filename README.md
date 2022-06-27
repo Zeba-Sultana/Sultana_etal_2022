@@ -1,4 +1,6 @@
-# Sultana_etal_2022
+# Sultana_etal_2022 : The Impact Of Double X-Dosage On Signaling Pathways Implicated In Pluripotency
+Zeba Sultana, Mathurin Dorel, Bertram Klinger , Anja Sieber , Nils Blüthgen , Edda G. Schulz 
+
 
 The complete analysis and all figures from the paper can be generated using the data and scripts in this repository.
 The folder has been organised into subfolders, each of which accomplishes one step of the data preprocessing and analysis.
