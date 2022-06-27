@@ -13,10 +13,10 @@ Using the function ReadInWBData
 
 1.) Read in the files output by script 1(Smad2p values for ActDR and SBDR) into the following dataframes : Activin_DR_Smad2 and SB_DR_Smad2
 2.) Select the required columns and rename for ease of identfication
-
-4.) x-axis :
-For increasing Activin signaling, in case of Activin DR, it is straight forward. I plot the log2(Activin concentration+1) on x-axis.
-For SBDR, it is one additional step, since increasing signaling via the Activin pathway corresponded to lesser concentration ofthe Activin Receptor Inhibitor SB, I did the following. Calculated the log2(SB conc+1). Them multiplied it with -1 to invert the seq, so the values corresponding to the highest concentration of the inhibitor lie at the left most side of the plot.
+3.)Plot the results using cutom function.
+Note on the x-axis :
+For increasing Activin signaling, in case of Activin DR, it is straight forward. Plotted the log2(Activin concentration+1) on x-axis.
+For decreasing the signaling via Activin pathway we used Activin receptor inhibitor. So to have the plot such that moving from left to right increases the signaling via Activin pathway, multiplied log2(SB conc+1) with -1 so as to invert the seq. So the values corresponding to the highest concentration of the inhibitor lie at the left most side of the plot.
 
 
 
