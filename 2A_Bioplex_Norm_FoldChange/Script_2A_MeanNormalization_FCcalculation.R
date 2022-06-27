@@ -21,10 +21,7 @@ Fetch_Bioplex_Data <- function(datas,control){
   datas <- datas
   control <- control
   colnames(control) <- colnames(datas)
-  #rownames(control) <- rownames(datas) # There is no need to do this. Moreover it would be technically wrong to have rownames in this matrix, because these are mean values repeated in a number of rows for ease of division to get FC over untreated control.
-  #Stat3 measurement from Millipore is being dropped, because WB data looks better. 
-  #Therefore only Biorad assay data alone is being used.
-  #analytes_inlcuded <- c("Gsk3","Mek","mTor","Akt")
+
   
   analytes_inlcuded <- c("Gsk3","Mek","mTor","Akt")
   
@@ -92,9 +89,7 @@ Normalize_Bioplex_allMean <- function(data_df, ReplicateNum, X_Status) {
     filter(!grepl("^c[d]*",Treatment))
   #filter(Treatment !="c") #Was beign used earlier to find control rows
   
-  sub_data_t_cmean <- dplyr::bind_rows(sub_data_t,sub_data_cmeans) #Improve this - rbind does not take into account the names of columns so a mistake can creep in #TO_IMPROVE
-  #rbind.fill is to make sure that columns are correctly matched before rowbinding. But I think rbind aslo is doing column matching now.
-  #Another advantage is that rbind.fill is faster and also if columns are missing in dfs being rbinded, it adds them filled with NAs
+  sub_data_t_cmean <- dplyr::bind_rows(sub_data_t,sub_data_cmeans) 
   
   sub_data_overall_mean <- sub_data_t_cmean %>% 
     summarize_at(.vars = vars(Gsk3:Akt),
@@ -139,17 +134,6 @@ Bioplex_FC_controlMean <- function(data_df, ReplicateNum, X_Status) {
   # sub_data_cmeans$x_status <- X_Status
   sub_data_cmeans$Replicate <- ReplicateNum
   
-  # sub_data_t <-   sub_data %>%
-  #   filter(Treatment !="c")
-  # 
-  # sub_data_t_cmean <- rbind(sub_data_t,sub_data_cmeans) #Improve this - rbind does not take into account the names of columns so a mistake can creep in #TO_IMPROVE
-  # 
-  # sub_data_overall_mean <- sub_data_t_cmean %>% 
-  #   summarize_at(.vars = vars(Gsk3:Akt),
-  #             .funs = funs(mean(.,na.rm=TRUE)),.keep_all = TRUE) %>% 
-  #   rename_at(.vars = vars(Gsk3:Akt),
-  #             .funs = funs(paste0(.,"_mean")))
-  # sub_data_overall_mean$replicate <- ReplicateNum
   
   sub_data_mean_Norm_calc <- left_join(sub_data,sub_data_cmeans,by= "Replicate")
   
