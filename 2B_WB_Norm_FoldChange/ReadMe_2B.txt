@@ -3,11 +3,11 @@ In this folder PS2B the following steps are accomplished :
 Aim : Normalization of Western Blot data by Mean of the Gel and then calculation of Fold change over untreated control
 
 1.) The input data is at : 
-../PS1B_WB_SignalQuantification/OUTPUT/Replicate3_Alldata.xls
-../PS1B_WB_SignalQuantification/OUTPUT/Replicate4_Alldata.xls
-../PS1B_WB_SignalQuantification/OUTPUT/Replicate5_Alldata.xls
+../1B_WB_SignalQuantification/OUTPUT/Replicate3_Alldata.xls
+../1B_WB_SignalQuantification/OUTPUT/Replicate4_Alldata.xls
+../1B_WB_SignalQuantification/OUTPUT/Replicate5_Alldata.xls
 
-2.) The script for this calculation : PS2B_Script_WB_GelMeanNormalization_FCcalculation.R
+2.) The script for this calculation : Script_2B_WB_GelMeanNormalization_FCcalculation.R
 
 3.) Tasks accomplished in the script :
 ************************************************
@@ -22,7 +22,7 @@ We decided to use the second normalization method(ie normalization over mean sig
 ## Normalization over Gel mean(Steps followed)
 *step1 : For each gel of each of the 3 replicates, the mean value for each of the analytes was calculated  (Detail : However, before calculating the mean values, the samples which had NA values (1 in XX3,1 in XX5 and 10 in XO5) were also removed from the other 2 replicates before calculating the mean, so that there is no skew.)
 
-*step 2 : For all analytes, the T_Norm value was divided by the mean value of that analyte for the Gel.
+*step 2 : For all analytes, the T_Norm value was divided by the mean T_Norm value of that analyte for the Gel.
 
 ## Calculation of fold change over untreated control(Steps followed)
 In order to use Fold change values as input for STASNet, we needed to retain variation in control values.
@@ -34,7 +34,5 @@ step2 : Use the mean calculated above to divide all values on the 3 replicates o
 
 ********************************
 
-4.) Output saved at : ./OUTPUT
-WBN2_GelMean_Norm_FC_Statsnet.xls will be used as input to STASNet.
-
+4.) Output saved at : OUTPUT and OUTPUT_PAPER
 
