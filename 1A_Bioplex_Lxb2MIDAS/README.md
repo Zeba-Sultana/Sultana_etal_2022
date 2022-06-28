@@ -1,4 +1,4 @@
-### Aim : Read in the data from Bioplex Assay(as lxb files) and convert them into MIDAS file
+### Aim : Read in the data from Bioplex Assay(as lxb files) and convert them to MIDAS files
 
 Common Note : I had done 5 replicates of the experiments for testing various factors. The first 2 replicates have not been used for any of the final data and model building. The replicates used for the paper were internalising called R3,R4 and R5.(Hence scripts and file names have these reference. Later they were renamed as follows :   
 R3 --> Rep1  
