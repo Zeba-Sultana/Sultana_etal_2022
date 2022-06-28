@@ -1,28 +1,28 @@
-## Aim : Read in the data from Bioplex Assay(as lxb files) and convert them into MIDAS file
+### Aim : Read in the data from Bioplex Assay(as lxb files) and convert them into MIDAS file
 
 Common Note : I had done 5 replicates of the experiments for testing various factors. The first 2 replicates have not been used for any of the final data and model building. The replicates used for the paper were internalising called R3,R4 and R5.(Hence scripts and file names have these reference. Later they were renamed as follows :   
 R3 --> Rep1  
 R4 --> Rep2  
 R5 --> Rep3   
 
-** SUMMARY **
+**SUMMARY**
 
 Files in this folder and their functions :
 
-** Custom script for converting lxb files to MIDAS files : AllReplicates_perform_lxb_extraction.R
+* Custom script for converting lxb files to MIDAS files : AllReplicates_perform_lxb_extraction.R
 It can be executed from the terminal using "Script AllReplicates_perform_lxb_extraction.R"
 The R package "lxb" is required for the execution.
 
-** This script calls the input files and other scripts that are in 2 folders in this directory :
+* This script calls the input files and other scripts that are in 2 folders in this directory :
 (i) INPUTfiles_BioplexR3_R4 : For replicates 3 and 4
 (ii) INPUTfiles_BioplexR5 : For replicate 5
 
 The input files being used for the Replicates3/4 are different from that of replicate5 because the experimental plate design was different in R5 as compared to R3 and R4. Secondly, lesser number of analytes were assayed in R5( We retained only those analyses in the Bioplex Assay that had shown a reliable signal in the 11-plex assay done on R3 and R4)
 
-** The MIDAS FILES to be used in the next steps are in OUTPUT_MIDASfiles
+* The MIDAS FILES to be used in the next steps are in OUTPUT_MIDASfiles
 
 
-** DETAILED NOTES **
+**DETAILED NOTES**
 
 1.) AllReplicates_perform_lxb_extraction.R : Script to extract data from lxb folders in the form of corresponding MIDAS files. This needs to be done for each of the 6 lxb folders(3 replicates of XX and XO) - being done in for loops in this script.
 
