@@ -10,7 +10,7 @@ Zeba Sultana(1), Mathurin Dorel(2), Bertram Klinger(2) , Anja Sieber(2) , Nils B
 
 The complete analysis and all figures from the paper can be generated using the data and scripts in this repository.
 The folder has been organised into subfolders, each of which accomplishes one step of the data preprocessing and analysis.
-The following steps can be followed sequentially for the complete analysis and these form the basis for categorisation of scripts into subfolders.  
+The following steps can be followed sequentially for the complete analysis and they form the basis for categorisation of scripts into subfolders.  
 
 **Step 1 :** Extracting the data from perturbation experiments and its quantification
 1A.) Bioplex Assay results(lxb) converted to MIDAS format files.
