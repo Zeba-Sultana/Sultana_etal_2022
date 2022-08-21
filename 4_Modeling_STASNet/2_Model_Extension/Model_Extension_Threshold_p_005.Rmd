@@ -1199,3 +1199,28 @@ print(p)
 
 ```
 
+Coefficient of determination(R^2) :
+
+
+```{r}
+
+Coeff_Determination = list()
+
+Coeff_Determination$Init_XX = Init_XX_FC_model$Rscores
+Coeff_Determination$Final_XX = LA10_XX_FC_model$Rscores
+Coeff_Determination$Init_XO = Init_XO_FC_model$Rscores
+Coeff_Determination$Final_XO = LA10_XO_FC_model$Rscores
+
+Coeff_Determination_df <- data.frame((sapply(Coeff_Determination,c)))
+
+write.csv(Coeff_Determination_df, "Coeff_Determination_df.csv")
+
+
+Coeff_Determination_df$Init_XX <- round(Coeff_Determination_df$Init_XX, 3)
+Coeff_Determination_df$Final_XX <- round(Coeff_Determination_df$Final_XX, 3)
+Coeff_Determination_df$Init_XO <- round(Coeff_Determination_df$Init_XO, 3)
+Coeff_Determination_df$Final_XO <- round(Coeff_Determination_df$Final_XO, 3)
+
+PrintOut_Table(Coeff_Determination_df)
+
+```
