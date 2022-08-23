@@ -52,7 +52,7 @@ g <- ggplot(Coeff_Determination_long, aes(x=Model, y=Coeff,color = Model, fill =
         panel.border = element_rect(colour = "black", fill=NA, size=0.5),
         panel.spacing.x = unit(0.5, "lines")) #This is to control that space between panels horizontally
 
-gt=set_panel_size(g,width=unit(1.8,'cm'),height=unit(2.0,'cm'))
+gt=set_panel_size(g,width=unit(1.95,'cm'),height=unit(2.0,'cm'))
 grid.arrange(gt)
 ggsave("Fig3B_Coeff_Determination.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER",width = 25, height = 20, units = "cm") 
 
