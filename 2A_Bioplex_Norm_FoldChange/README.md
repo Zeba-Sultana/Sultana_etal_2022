@@ -6,7 +6,7 @@
 2.) The script for normalisation and fold change over DMSO : PS2A_Script_MeanNormalization_FCcalculation.R
 
 3.) Tasks accomplished :
-*****************************
+
 S2A(i) : Bioplex : Normalization over mean signal of replicate
 
 The bioplex data is normalized over the the mean signal of the replicate. The calculations are done as follows :
