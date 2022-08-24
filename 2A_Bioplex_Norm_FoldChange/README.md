@@ -7,7 +7,7 @@
 
 3.) Tasks accomplished :
 
-S2A(i) : Bioplex : Normalization over mean signal of replicate
+*S2A(i) : Bioplex : Normalization over mean signal of replicate
 
 The bioplex data is normalized over the the mean signal of the replicate. The calculations are done as follows :
 1.) Read in the raw MFI values.
@@ -18,9 +18,10 @@ The bioplex data is normalized over the the mean signal of the replicate. The ca
 This calculation also ensures that the control values are not exactly 1 but vary around 1.
 
 
-S2A(ii) : Calculation of Fold change over untreated control
+*S2A(ii) : Calculation of Fold change over untreated control
+
 The normalized data(over mean signal in this case), is used to calculate fold change over untreated control - By diving each data point by the mean of the control values. The Fold change values are then taken as input to STASNet.
-********************************
+
 
 4.) Fold Change over control to be used as input to STASNet is saved at : ./OUTPUT
 
