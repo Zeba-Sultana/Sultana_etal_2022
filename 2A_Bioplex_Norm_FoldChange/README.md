@@ -1,4 +1,4 @@
-Aim : Normalization of Bioplex readings by Mean of the replicate and then calculation of Fold change over untreated control
+**Aim : Normalization of Bioplex readings by Mean of the replicate and then calculation of Fold change over untreated control**
 
 
 1.) The input data is the MIDAS files generated from lxb files
