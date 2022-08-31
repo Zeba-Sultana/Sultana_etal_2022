@@ -7,7 +7,7 @@ WB_Normalized <- "../2B_WB_Norm_FoldChange/OUTPUT/WBN2_GelMean_Norm_FC_Statsnet.
 
 * The script for this : Script_3_Merge_BP_WB.R
 
-* Tasks accomplished in the script :
+* Tasks accomplished in the script :   
 1.) Bioplex Data  
 (i) Read in Bioplex data(fold change values)   
 (ii) Replace the Akt values for XXR5 and XOR4 with NA because these replicates were not consistent with the other two replicates due to very high variability.   
@@ -30,7 +30,6 @@ Merged MIDAS files for XX Replicates(XX_R345.csv)
 Merged MIDAS files for XO Replicates(XO_R345.csv)
 
 
-********************************
 * Output saved at : ./OUTPUT
 XX_R345.csv and XO_R345.csv will be used as input to STASNet
 
