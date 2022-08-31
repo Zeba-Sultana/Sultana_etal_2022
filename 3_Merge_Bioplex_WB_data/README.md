@@ -26,9 +26,9 @@ WB_Normalized <- "../2B_WB_Norm_FoldChange/OUTPUT/WBN2_GelMean_Norm_FC_Statsnet.
   Since there are different number of controls in the Bioplex and WB data, first the treatment and control rows are separated. Treatment rows are easily merged using     left join. But for control rows, I check which one has more rows, make the other one of equal size by filling in with NA rows and then merge them.
   Lastly I make sure to drop the bioplex analytes that did not give correct signal for the remaining analytes (such as p38 etc). bCatenin as a Western Blot read out is   also dropped because of very large variation in data.
 
-  4.) finally,
-  Merged MIDAS files for XX Replicates(XX_R345.csv)
-  Merged MIDAS files for XO Replicates(XO_R345.csv)
+  4.) finally,  
+  Merged MIDAS files for XX Replicates(XX_R345.csv)   
+  Merged MIDAS files for XO Replicates(XO_R345.csv)  
 
 
 * Output saved at : ./OUTPUT
