@@ -1,5 +1,5 @@
 ## Sultana_etal_2022 : 
-# Modeling the cell signaling network in mouse embryonic stem cells provides insights into sex-based differences in pluripotency maintenance and differentiation
+## Modeling the cell signaling network in mouse embryonic stem cells provides insights into sex-based differences in pluripotency maintenance and differentiation
 Zeba Sultana(1), Mathurin Dorel(2), Bertram Klinger(2) , Anja Sieber(2) , Nils Blüthgen(2) , Edda G. Schulz(1)    
 
 1 Regulatory Networks in Stem Cells, Max Planck Institute for Molecular Genetics, Berlin    
