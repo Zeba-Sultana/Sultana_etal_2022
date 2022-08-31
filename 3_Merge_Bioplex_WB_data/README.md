@@ -1,5 +1,5 @@
 
-**Aim : Convert the dataframes containing the normalized Foldchange over control values of BP and WB into MIDAS files and then merge them.
+**Aim : Convert the dataframes containing the normalized Foldchange over control values of BP and WB into MIDAS files and then merge them.**
 
 1.) The input data is at : 
 BP_Normalized <- "../2A_Bioplex_Norm_FoldChange/OUTPUT/Bioplex_FC_STASNet.xls"
@@ -8,15 +8,14 @@ WB_Normalized <- "../2B_WB_Norm_FoldChange/OUTPUT/WBN2_GelMean_Norm_FC_Statsnet.
 2.) The script for this : Script_3_Merge_BP_WB.R
 
 3.) Tasks accomplished in the script :
-************************************************
-##Bioplex Data
+* Bioplex Data
 (i) Read in Bioplex data(fold change values) 
 (ii) Replace the Akt values for XXR5 and XOR4 with NA because these replicates were not consistent with the other two replicates due to very high variability.
 (iii) Covert there dataframes to matrices and drop the annotation columns.
 (iv) This was needed so that the matrices can be used to generate the MIDAS file using the STASNet function midasFromData.
 
 
-##Western Blot Data
+* Western Blot Data
 (i) Read in WB data(fold change values) 
 (ii) Correct the nomenclature where needed to make consistent.
 (iii) Covert there dataframes to matrices and drop the annotation columns.
