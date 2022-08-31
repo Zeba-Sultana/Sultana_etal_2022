@@ -1,6 +1,5 @@
-In this folder PS3 the following steps are accomplished :  
 
-Aim : Convert the dataframes containing the normalized Foldchange over control values of BP and WB into MIDAS files and then merge them.
+**Aim : Convert the dataframes containing the normalized Foldchange over control values of BP and WB into MIDAS files and then merge them.
 
 1.) The input data is at : 
 BP_Normalized <- "../2A_Bioplex_Norm_FoldChange/OUTPUT/Bioplex_FC_STASNet.xls"
