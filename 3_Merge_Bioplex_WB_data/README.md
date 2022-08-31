@@ -31,10 +31,10 @@ WB_Normalized <- "../2B_WB_Norm_FoldChange/OUTPUT/WBN2_GelMean_Norm_FC_Statsnet.
   Merged MIDAS files for XO Replicates(XO_R345.csv)  
 
 
-* Output saved at : ./OUTPUT
+* Output saved at : ./OUTPUT   
 XX_R345.csv and XO_R345.csv will be used as input to STASNet
 
-* Output for supplementary tables S4 and S5 used in paper saved at : ./OUTPUT_PAPER
+* Output for supplementary tables S4 and S5 used in paper saved at : ./OUTPUT_PAPER   
 Suppl_Table_S4_XX_MIDAS.csv and Suppl_Table_S5_XO_MIDAS.csv
 
 
