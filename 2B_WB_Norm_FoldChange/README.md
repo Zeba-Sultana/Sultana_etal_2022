@@ -23,7 +23,7 @@ We decided to use the second normalization method(ie normalization over mean sig
 
 * Calculation of fold change over untreated control(Steps followed)
 In order to use Fold change values as input for STASNet, we needed to retain variation in control values.
-If we simply calculate fold change over the untreated control present on each gel, the control values on each of those gels becomes 1 and there is no variation in the control values.(Here we needed to take fold change values since analytes have been measured with different techniques - 2 different assay kits of Bioplex and WB )
+(We needed to take fold change values since analytes have been measured with different techniques - 2 different assay kits of Bioplex and WB )
 Therefore FC is calculated as follows :
 step1 : Calculate the mean of control values across the 3 replicates of each gel.
 step2 : Use the mean calculated above to divide all values on the 3 replicates of the gel to get fold change values
