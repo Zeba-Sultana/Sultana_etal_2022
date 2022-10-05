@@ -26,12 +26,15 @@ Coeff_Determination_long$Model = factor(Coeff_Determination_long$Model, levels =
 MyCategoryColours <- c("Init-XX"= "#dd1c77","Init-XO"="#f768a1",
                        "Comp-XX"= "#006d2c", "Comp-XO" = "#74c476")
 
-MyCategoryFill <- c("Init-XX"= "#dd1c77","Init-XO"="#FFFFFF",
-                    "Comp-XX"= "#006d2c", "Comp-XO" = "#FFFFFF")
+# MyCategoryFill <- c("Init-XX"= "#dd1c77","Init-XO"="#FFFFFF",
+#                     "Comp-XX"= "#006d2c", "Comp-XO" = "#FFFFFF")
+
+MyCategoryFill <- c("Init-XX"= "#dd1c77","Init-XO"="#fde0dd",
+                    "Comp-XX"= "#006d2c", "Comp-XO" = "#a1d99b")
 
 g <- ggplot(Coeff_Determination_long, aes(x=Model, y=Coeff,color = Model, fill = Model))+
   facet_grid(.~analyte_name)+
-  geom_bar(stat = "identity",width=0.6, position = position_dodge(width=0.2),size=1)+
+  geom_bar(stat = "identity",width=0.6, position = position_dodge(width=0.2),size=0.7)+ #To make thinner outline ;size=0.7 (instead of 1)
   scale_fill_manual(values= MyCategoryFill, labels=c("Initial Model:XX","Completed Model:XX","Initial Model:XO","Completed Model:XO"))+ # fill works only for some point shapes , Eg 21 -25
   scale_color_manual(values= MyCategoryColours, labels=c("Initial Model:XX","Completed Model:XX","Initial Model:XO","Completed Model:XO"))+
   ylim(-0.5,1)+
