@@ -29,7 +29,7 @@ Step 1B :
 
 
 ########## Step 3 : Plot PointRange plots ######     
-### Plotting Fig 3 D
+#### Plotting Fig 3 E
 1.) Read in ALL_DATA (ie 3 Exp replicates+ Simulation from Initial and Final Models), that was written out in Step1A above.   
 2.) Subset only the Exp data from here and do two kinds of t-tests :   
 (i) 2-sample t-test and compare XX and XO :    
@@ -43,13 +43,15 @@ Store the mean of XX and XO cells, pvalue of the XX & XO comparison(called XX_XO
 6.) Use the function Loop_MaxDiff to plot this data : Fig 3D    
 
 
-### Plotting Fig 3 B and C   
+#### Plotting Fig 3 C and D   
 Use Mismatch_DATA.csv saved in the OUTPUT folder   
 
 1.) Subset mismatch data for Initial Model of XX (or XO)   
 2.) group this data by analyte and find the highest mismatch value per analyse   
 3.) Using this you can get names of the treatments that had highest mismatch between Exp data and Initial XX model per analyse.   
 4.) Use the Loop_MaxDiff function to generate Fig 3B (or Fig 3C)   
+
+########## Step 4 : Plot coefficient of determination ###### 
 
 
 
