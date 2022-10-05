@@ -7,7 +7,7 @@ The final model recapituales the exp data much better than the initial model and
 ###########  Step0  ###########      
 Merging the WB and Bioplex data in non-MIDAS format. For model building I had used a function form STASNet that merged the MIDAS format of files. For plotting the exp data alongside the simulation results, I merge here the WB and Bioplex FC data and saved the Log2FC values within the Exp_Data sub-folder in the INPUTS.
 
-########## Step 1 : Read in Experimental and Simulation Data ###### 
+########## Step 1 : Read in Experimental and Simulation Data ######      
 #To get the data for comparison of Exp Data and Simulation results
 Step 1A:   
 1.) Rebuild the initial models for XX and XO using their mra and midas files.   
