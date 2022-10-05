@@ -7,7 +7,7 @@ The final model recapituales the exp data much better than the initial model and
 ###########  Step0  ###########      
 Merging the WB and Bioplex data in non-MIDAS format. For model building I had used a function form STASNet that merged the MIDAS format of files. For plotting the exp data alongside the simulation results, I merge here the WB and Bioplex FC data and saved the Log2FC values within the Exp_Data sub-folder in the INPUTS.
 
-########## Step 1 : Read in Experimental and Simulation Data ######      
+########## 1 : Read in Experimental and Simulation Data ######      
 #To get the data for comparison of Exp Data and Simulation results
 Step 1A:   
 1.) Rebuild the initial models for XX and XO using their mra and midas files.   
@@ -21,15 +21,15 @@ Step 1B :
 2.) Use the $mismatch from the output of plotModelAccuracy function for the final/completed models   
 3.) Combine the two and save as Mismatch_DATA.csv in the OUTPUT folder   
 
-########## Step 2 : Plot Heatmaps : Fig 3A, 1C ######    
-
+########## 2 : Plot Heatmaps  ######    
+#### Plotting Fig 3A and 1C
 1.) Read in the experimental data and results from the simulation of initial and final models.    
 2.) Create 11*11 matrix to accomodate resulst of DMSO,10 treatments and their combinations. The lower triangle of this matrox gets data from XX and the upper triangle gets data from XO. Thre such matroces are made : one each for exp data, initial model and completed model simulations.   
 3.) Plot heatmaps for Fig3A and Fig1C using custom functions.    
 
 
-########## Step 3 : Plot PointRange plots ######     
-#### Plotting Fig 3 E
+########## 3 : Plot PointRange plots ######     
+#### Plotting Fig 3E
 1.) Read in ALL_DATA (ie 3 Exp replicates+ Simulation from Initial and Final Models), that was written out in Step1A above.   
 2.) Subset only the Exp data from here and do two kinds of t-tests :   
 (i) 2-sample t-test and compare XX and XO :    
@@ -43,7 +43,7 @@ Store the mean of XX and XO cells, pvalue of the XX & XO comparison(called XX_XO
 6.) Use the function Loop_MaxDiff to plot this data : Fig 3D    
 
 
-#### Plotting Fig 3 C and D   
+#### Plotting Fig 3C and D   
 Use Mismatch_DATA.csv saved in the OUTPUT folder   
 
 1.) Subset mismatch data for Initial Model of XX (or XO)   
@@ -51,7 +51,8 @@ Use Mismatch_DATA.csv saved in the OUTPUT folder
 3.) Using this you can get names of the treatments that had highest mismatch between Exp data and Initial XX model per analyse.   
 4.) Use the Loop_MaxDiff function to generate Fig 3B (or Fig 3C)   
 
-########## Step 4 : Plot coefficient of determination ###### 
+########## 4 : Plot coefficient of determination ######     
+#### Plotting Fig 3B 
 
 
 
