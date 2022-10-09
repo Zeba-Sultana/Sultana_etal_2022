@@ -158,7 +158,7 @@ final_plot <- grid.arrange(arrangeGrob(grobs=XXXODiff_AnalyteWise, nrow = nRows_
                            nrow = 2,
                            heights = c(nRows_plots,0.5))
 
-ggsave(file="Fig3D_XXXODiff_AllPert_perAnalyte.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
+ggsave(file="Fig3_XXXODiff_AllPert_perAnalyte.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
 
 print("Saved Fig3D in OUTPUT_PAPER")
 
@@ -246,7 +246,7 @@ final_plot <- grid.arrange(arrangeGrob(grobs=Mismatch_AllPert_perAnalayte, nrow 
                            nrow = 2,
                            heights = c(nRows_plots,0.5))
 
-ggsave(file="Fig3B_Mismatch_AllPert_perAnalayte_XX.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
+ggsave(file="Fig3_Mismatch_AllPert_perAnalayte_XX.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
 
 
 print("Fig3B saved in OUTPUT_PAPER")
@@ -304,7 +304,7 @@ final_plot <- grid.arrange(arrangeGrob(grobs=Mismatch_AllPert_perAnalayte, nrow 
                            nrow = 2,
                            heights = c(nRows_plots,0.5))
 
-ggsave(file="Fig3C_Mismatch_AllPert_perAnalayte_XO.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
+ggsave(file="Fig3_Mismatch_AllPert_perAnalayte_XO.pdf", final_plot, dpi=300, path='OUTPUT_PAPER', useDingbats=FALSE, width = (2.3*nCols_plots)+0.5, height = (2.8*nRows_plots)+3, units = "cm" )
 
 print("Fig3C saved in OUTPUT_PAPER")
 

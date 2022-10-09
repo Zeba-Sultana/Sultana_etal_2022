@@ -76,9 +76,13 @@ Loop_MaxDiff <- function(ALL_DATA,CellLine,Selected_Perturbations,Selected_Analy
                          "Initial Model-XX"= "#dd1c77","Initial Model-XO"="#f768a1",
                          "Final Model-XX"= "#006d2c", "Final Model-XO" = "#74c476")
   
+  # MyCategoryFill <- c("Exp XX"="#252525","Exp XO"="#FFFFFF",
+  #                     "Initial Model-XX"= "#dd1c77","Initial Model-XO"="#FFFFFF",
+  #                     "Final Model-XX"= "#006d2c", "Final Model-XO" = "#FFFFFF")
+  
   MyCategoryFill <- c("Exp XX"="#252525","Exp XO"="#FFFFFF",
-                      "Initial Model-XX"= "#dd1c77","Initial Model-XO"="#FFFFFF",
-                      "Final Model-XX"= "#006d2c", "Final Model-XO" = "#FFFFFF")
+                      "Initial Model-XX"= "#dd1c77","Initial Model-XO"="#fde0dd",
+                      "Final Model-XX"= "#006d2c", "Final Model-XO" = "#a1d99b")
   
   
   
@@ -113,7 +117,13 @@ Loop_MaxDiff <- function(ALL_DATA,CellLine,Selected_Perturbations,Selected_Analy
       ggtitle(paste0(Selected_Analytes[i]))+
       
       #MyPaperTheme+
-      theme(axis.text.x = element_blank(),
+      theme( 
+        
+            # panel.background = element_rect(fill = "lightblue",
+            #                                  colour = "lightblue",
+            #                                  size = 0.5, linetype = "solid"),
+            # 
+            axis.text.x = element_blank(),
             #axis.text.x = element_text(angle = 90,size = 7, colour = "black",vjust = 0.5, hjust=1),
             axis.text.y = element_text(angle = 0, size = 6, colour = "black",hjust = 1),
             strip.text.y.left = element_text(angle = 0),
