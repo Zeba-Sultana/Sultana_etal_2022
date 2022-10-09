@@ -31,13 +31,13 @@ ALL_DATA <- ALL_DATA %>%
 
 ALL_DATA$Cat3 = factor(ALL_DATA$Cat3, levels = c("Exp","Initial_Model","Final_Model"))
 
-colnames(ALL_DATA) <- gsub("Gsk3_p", "pGsk3", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("Mek_p", "pMek", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("mTor_p", "pmTor", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("Akt_p", "pAkt", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("Erk_p", "pErk", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("Stat3_p", "pStat3", colnames(ALL_DATA) )
-colnames(ALL_DATA) <- gsub("Smad2_p", "pSmad2", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Gsk3_p", "pGSK3", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Mek_p", "pMEK", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("mTor_p", "pmTOR", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Akt_p", "pAKT", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Erk_p", "pERK", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Stat3_p", "pSTAT3", colnames(ALL_DATA) )
+colnames(ALL_DATA) <- gsub("Smad2_p", "pSMAD2", colnames(ALL_DATA) )
 
 
 ## Separating the Exp and Simulation Data :
@@ -116,13 +116,13 @@ print(" T-tests on Exp Data : results saved : t_result_df.csv in OUTPUT")
 # --> filters those rows where there is significant diff between XX and XO
 # --> arranges the rows in descending order of XX minus XO values(absolute)
 
-t_result_df_Akt_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pAkt", 0.1) # pAkt was very variable, none passed the TH of p<0.05
-t_result_df_Gsk3_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pGsk3", 0.05)
-t_result_df_mTor_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pmTor", 0.05)
-t_result_df_Mek_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pMek", 0.05)
-t_result_df_Erk_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pErk", 0.05)
-t_result_df_Stat3_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pStat3", 0.05)
-t_result_df_Smad2_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pSmad2", 0.05)
+t_result_df_Akt_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pAKT", 0.1) # pAKT was very variable, none passed the TH of p<0.05
+t_result_df_Gsk3_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pGSK3", 0.05)
+t_result_df_mTor_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pmTOR", 0.05)
+t_result_df_Mek_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pMEK", 0.05)
+t_result_df_Erk_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pERK", 0.05)
+t_result_df_Stat3_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pSTAT3", 0.05)
+t_result_df_Smad2_filt <- Filter_XXXOpval_perAnalyte(t_result_df, "pSMAD2", 0.05)
 
 ### Collating the 1st row(corresponding to highest absoulte XXminusXO) from all the above analyte-wise subsets
 Selected_XXXODiff_AnalyteWise <- bind_rows(t_result_df_Akt_filt[1,],
@@ -171,13 +171,13 @@ Mismatch_DATA <- read.csv("./OUTPUT/Mismatch_DATA.csv")
 Mismatch_DATA <- Mismatch_DATA %>% 
   select(-X)
 
-colnames(Mismatch_DATA) <- gsub("Gsk3_p", "pGsk3", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("Mek_p", "pMek", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("mTor_p", "pmTor", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("Akt_p", "pAkt", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("Erk_p", "pErk", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("Stat3_p", "pStat3", colnames(Mismatch_DATA) )
-colnames(Mismatch_DATA) <- gsub("Smad2_p", "pSmad2", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Gsk3_p", "pGSK3", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Mek_p", "pMEK", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("mTor_p", "pmTOR", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Akt_p", "pAKT", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Erk_p", "pERK", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Stat3_p", "pSTAT3", colnames(Mismatch_DATA) )
+colnames(Mismatch_DATA) <- gsub("Smad2_p", "pSMAD2", colnames(Mismatch_DATA) )
 
 
 ### Subsetting the initial and completed models of the 2 cell lines 
@@ -212,7 +212,7 @@ Highest_mismatch_AllPert_perAnalayte <- Init_XX_Accuracy_MM_long %>%
   slice(which.max(abs(mismatch_value))) ## Best way to get the rows corresponding to the max values !!
 
 
-Analyte_seq <- c("pAkt","pGsk3","pmTor","pMek","pErk","pStat3","pSmad2")
+Analyte_seq <- c("pAKT","pGSK3","pmTOR","pMEK","pERK","pSTAT3","pSMAD2")
 
 Highest_mismatch_AllPert_perAnalayte$Analyte <- factor(Highest_mismatch_AllPert_perAnalayte$Analyte, levels = Analyte_seq)
 
@@ -270,7 +270,7 @@ Highest_mismatch_AllPert_perAnalayte <- Init_XO_Accuracy_MM_long %>%
   slice(which.max(abs(mismatch_value))) ## Best way to get the rows corresponding to the max values !!
 
 
-Analyte_seq <- c("pAkt","pGsk3","pmTor","pMek","pErk","pStat3","pSmad2")
+Analyte_seq <- c("pAKT","pGSK3","pmTOR","pMEK","pERK","pSTAT3","pSMAD2")
 
 Highest_mismatch_AllPert_perAnalayte$Analyte <- factor(Highest_mismatch_AllPert_perAnalayte$Analyte, levels = Analyte_seq)
 
