@@ -113,7 +113,8 @@ Loop_MaxDiff <- function(ALL_DATA,CellLine,Selected_Perturbations,Selected_Analy
       scale_y_continuous(labels=scaleFUN,
                          # position = "right",
                          expand = expansion(mult = c(0.25, 0.25)))+ # To expand the limits such that 0 zero does not lie at exactly the border
-      xlab(paste0(Selected_Perturbations[i]))+
+      #xlab(paste0(Selected_Perturbations[i]))+
+      xlab(toupper(paste0(Selected_Perturbations[i])))+ ## Made the perturbations label to uppercase
       ggtitle(paste0(Selected_Analytes[i]))+
       
       #MyPaperTheme+
