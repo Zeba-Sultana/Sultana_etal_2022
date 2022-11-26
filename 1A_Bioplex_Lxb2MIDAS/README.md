@@ -1,6 +1,6 @@
 ### Aim : Read in the data from Bioplex Assay(as lxb files) and convert them to MIDAS files
 
-Common Note : I had done 5 replicates of the experiments for testing various factors. The first 2 replicates have not been used for any of the final data and model building. The replicates used for the paper were internalising called R3,R4 and R5.(Hence scripts and file names have these reference. Later they were renamed as follows :   
+Common Note : I had done 5 replicates of the experiments for testing various factors. The first 2 replicates have not been used for any of the final data and model building. The replicates used for the paper were inititally called R3,R4 and R5.(Hence scripts and file names have these reference. Later they were renamed as follows :   
 R3 --> Rep1  
 R4 --> Rep2  
 R5 --> Rep3   
@@ -36,15 +36,14 @@ File 1.) experimental_layout.xls : This is an excel file which summarizes the pl
 
 File 2.) extract_experiment_annotations.R : In this file the following information needs to be updated based on current inputs :
 (i) annotations_file = The excel file described in 1 (For eg : “experimental_layout.xls”) and input the name of the sheet as the second argument.
-(ii) Define “Inhibitors” and “Stimulations”. The inhibitors should be name of the species(proteins) followed by “i”. (Note :Take care to have the names of the proteins spelled exactly the same here and in the Network.tab and Basal_activity.dat files will be used along with the MIDAS files for model creation.)
-
-Define the bead-region and corresponding analyte names from the bioplex assay used by you.
+(ii) Define “Inhibitors” and “Stimulations”. The inhibitors should be name of the node(protein) targeted by it, followed by “i”. (Note :Take care to have the names of the proteins spelled exactly the same here and in the Network.tab and Basal_activity.dat files will be used along with the MIDAS files for model creation.)
+(iii) Define the bead-region and corresponding analyte names from the bioplex assay used by you.
 Executing the above results in the following :
 -the table of experimental layout is read into a R-matrix which captures the plate design.
 -the stimulators and inhibitors are defined.
 -the bead-regions are mapped to the correct analyte names.
 *******************************************************
-EXTRACTING INFORMATION FROM LXB to get MIDAS : Excution using all the files listed above from (1 to 4) : The input files being used for the Replicates3/4 are different from that of replicate5 because the experimental plate design was different in R5 as compared to R3 and R4. Secondly, lesser number of analytes were assayed in R5.
+EXTRACTING INFORMATION FROM LXB to get MIDAS : Execution using all the files listed above from (1 to 4) : The input files being used for the Replicates3/4 are different from that of replicate5 because the experimental plate design was different in R5 as compared to R3 and R4. Secondly, lesser number of analytes were assayed in R5.
 
 INPUTfiles_BioplexR3_R4 : Folder with files specific for replicate 3 and 4 lxb files
 (Plate_Layout_BioRad_R3_R4.xls and extract_experiment_annotations_R3_R4.R)
