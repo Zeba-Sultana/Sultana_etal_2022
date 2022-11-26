@@ -35,13 +35,13 @@ The input files being used for the Replicates3/4 are different from that of repl
 File 1.) experimental_layout.xls : This is an excel file which summarizes the plate design of the Bioplex assay as a table, the location of different samples, control and blank in the 96 well plate(ie the plate design)
 
 File 2.) extract_experiment_annotations.R : In this file the following information needs to be updated based on current inputs :
-(i) annotations_file = The excel file described in 1 (For eg : “experimental_layout.xls”) and input the name of the sheet as the second argument.
-(ii) Define “Inhibitors” and “Stimulations”. The inhibitors should be name of the node(protein) targeted by it, followed by “i”. (Note :Take care to have the names of the proteins spelled exactly the same here and in the Network.tab and Basal_activity.dat files will be used along with the MIDAS files for model creation.)
-(iii) Define the bead-region and corresponding analyte names from the bioplex assay used by you.
-Executing the above results in the following :
--the table of experimental layout is read into a R-matrix which captures the plate design.
--the stimulators and inhibitors are defined.
--the bead-regions are mapped to the correct analyte names.
+(i) annotations_file = The excel file described in 1 (For eg : “experimental_layout.xls”) and input the name of the sheet as the second argument.    
+(ii) Define “Inhibitors” and “Stimulations”. The inhibitors should be name of the node(protein) targeted by it, followed by “i”. (Note :Take care to have the names of the proteins spelled exactly the same here and in the Network.tab and Basal_activity.dat files will be used along with the MIDAS files for model creation.)    
+(iii) Define the bead-region and corresponding analyte names from the bioplex assay used by you.    
+Executing the above results in the following :    
+-the table of experimental layout is read into a R-matrix which captures the plate design.   
+-the stimulators and inhibitors are defined.   
+-the bead-regions are mapped to the correct analyte names.    
 *******************************************************
 EXTRACTING INFORMATION FROM LXB to get MIDAS : Execution using all the files listed above from (1 to 4) : The input files being used for the Replicates3/4 are different from that of replicate5 because the experimental plate design was different in R5 as compared to R3 and R4. Secondly, lesser number of analytes were assayed in R5.
 
