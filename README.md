@@ -39,5 +39,5 @@ Note :
 
 2.) The output from scripts is saved into folders called OUTPUT or OUTPUT_PAPER.   
 OUTPUT : Has outputs that are used by later scripts.   
-OUTPUT_PAPER : Has output(Figures or Supplementary Tables) that are part of the paper. These also have the correct replicate number annotation as used in the paper.
+OUTPUT_PAPER : Has output(Figures or Supplementary Tables) that are part of the paper. These also have the correct replicate number annotation that is used in the paper.
 
