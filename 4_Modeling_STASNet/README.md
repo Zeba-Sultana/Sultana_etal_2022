@@ -7,7 +7,7 @@ Documented in various subfolders here are the input and major steps followed to 
 The Script "fit_script_withExtRed.R" was used for building the model. This script was used separately with perturbation input file for XX (Suppl_Table_S4_XX_MIDAS.csv) and that for XO(Suppl_Table_S4_XO_MIDAS.csv. These are the input files carrying results from the perturbation experiments in the MIDAS format.   
 The other input files that were common for both cell lines inlcude :   
 (i) Network.tab : This file describes the network. It is tab separted file where each link present in the network is described on one row - first column has the name of the outgoing node, followed by a tab and name of the incoming node in the second column. Initailly, Network.tab will enlist all the links present in the literature-derived netwrok. During the network extension preocedure the selected link is added to the Network.tab.   
-(ii) BasalActivity.dat : File that enlists all nodes that are assumed to have basal signaling activity.   
+(ii) BasalActivity.dat : File that enlists all nodes that are assumed to have basal signaling activity, which are all nodes except the ligands(Lif, Igf1,Fgf4,ActA and Bmp4)   
 
 
 * Subfolder : 2_Model_Extension   
