@@ -25,7 +25,7 @@ It describes the input files and steps for modeling a dataset using a toy exampl
 
 * **Subfolder : 2_Model_Extension**   
 Buiding the initial models for XX and XO using the "fit_script_withExtRed.R", results in the model(.mra) file along other files that decribe the overall fit to data achieved.  Additionally, since the fit script has "extension = TRUE", additional links that can improve the model fit are tested and a file (Extension.csv) enlisting links that can improve the fit to the model in generated.   
-The script "FindingCommonLink.R" (which calls "FindingCommonLink_FuncDefinitions.R") was used to find the best common link from the links suggested separately for the XX and XO models. The extension list for the two models is provided as input to "FindingCommonLink.R", which does the follwoing steps :
+The script "FindingCommonLink.R" (which calls "FindingCommonLink_FuncDefinitions.R") was used to find the best common link from the links suggested separately for the XX and XO models. The extension list for the two models is provided as input to "FindingCommonLink.R", which then executes  the follwoing steps :    
 1.) Read in the extension.csv for both cell lines   
 2.) Remove links from TFs and Ligands   
 3.) Retain only links that have adjusted p-value < selected threshold and value !=0   
