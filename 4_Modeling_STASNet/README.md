@@ -4,7 +4,7 @@
 Documented in various subfolders here are the input and major steps followed to achieve the above aims.
 
 * **Subfolder : 1_Modeling_Inputs_XX_XO**    
- Input files that were common for both cell lines inlcude :   
+ Input files used for modeling :      
 (i) Network.tab : This file describes the network. It is a tab separated file where each link present in the network is described on one row - first column has the name of the outgoing node, followed by a tab and name of the incoming node in the second column. Initailly, Network.tab will enlist all the links present in the literature-derived netwrok. During the network extension procedure, the selected link is added to the Network.tab.   
 (ii) BasalActivity.dat : File that enlists all nodes that are assumed to have basal signaling activity, which are all nodes except the ligands(Lif, Igf1,Fgf4,ActA and Bmp4) 
 (iii) Suppl_Table_S4_XX_MIDAS.csv(for XX) and Suppl_Table_S4_XO_MIDAS.csv(for XO) : Results from systematic perturbation experimentas form the two cell lines in MIDAS format.    
@@ -32,9 +32,9 @@ The R markdown file "Model_Extension_Threshold_p_005.Rmd" summarises the links a
 * **Subfolder : 3_Model_Extension_Different_Thresholds**  
 The results when using different p-value thresholds for filtering the links. Each of these also write out the residual values associated with the models at each link addition step with the different thrshold values :
 Threshold_p_05.Rmd (writes out the residuals in : Links_Residuals_p_05.csv)
-Threshold_p_01.Rmd (-> Links_Residuals_p_01.csv)
-Threshold_p_005.Rmd (-> Links_Residuals_p_005.csv)
-Threshold_p_001.Rmd (-> Links_Residuals_p_001.csv)
+Threshold_p_01.Rmd (writes out the residuals in : Links_Residuals_p_01.csv)
+Threshold_p_005.Rmd (writes out the residuals in : Links_Residuals_p_005.csv)
+Threshold_p_001.Rmd (writes out the residuals in : Links_Residuals_p_001.csv)
 
 * **Subfolder : 4_Plotting_ModelResiduals_Fig_2b_S2c**   
 Script for plotting the model residuals(Figures 2B and Suppl2C in the paper)
