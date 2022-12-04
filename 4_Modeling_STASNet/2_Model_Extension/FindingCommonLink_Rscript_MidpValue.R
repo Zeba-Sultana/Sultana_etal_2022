@@ -9,7 +9,7 @@ source(./FindingCommonLink_FuncDefinitions.R")
 
 ################# INPUT HERE ###############
 
-
+#Execute from the folder that carries the outputs from XX and XO modeling
 Ext_files_dir ="."
 
 ######### INIT
