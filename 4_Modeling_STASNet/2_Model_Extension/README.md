@@ -1,0 +1,28 @@
+The XX and XO models were extended together incorporating links that lead to best imporvement in fit as described in the paper. 
+
+SessionInfo :
+
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: MarIuX64 2.0 GNU/Linux
+
+Matrix products: default
+BLAS:   /pkg/R-3.6.3-0/lib/R/lib/libRblas.so
+LAPACK: /pkg/R-3.6.3-0/lib/R/lib/libRlapack.so
+
+locale:
+[1] C
+
+attached base packages:
+[1] grid      parallel  stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+[1] STASNet_1.0.2        RhpcBLASctl_0.18-205 lattice_0.20-38     
+[4] lhs_1.0.2            pheatmap_1.0.12      Rgraphviz_2.30.0    
+[7] graph_1.64.0         BiocGenerics_0.32.0  Rcpp_1.0.4.6        
+
+loaded via a namespace (and not attached):
+ [1] codetools_0.2-16   R6_2.4.1           lifecycle_0.2.0    gtable_0.3.0      
+ [5] stats4_3.6.3       scales_1.1.1       rlang_0.4.6        RColorBrewer_1.1-2
+ [9] munsell_0.5.0      compiler_3.6.3     colorspace_1.4-1  
