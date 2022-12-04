@@ -6,7 +6,7 @@ Documented in various subfolders here are the input and major steps followed to 
 * **Subfolder : 1_Modeling_Inputs_XX_XO**    
  Input files used for modeling :      
 (i) Network.tab : This file describes the network. It is a tab separated file where each link present in the network is described on one row - first column has the name of the outgoing node, followed by a tab and name of the incoming node in the second column. Initailly, Network.tab will enlist all the links present in the literature-derived netwrok. During the network extension procedure, the selected link is added to the Network.tab.   
-(ii) BasalActivity.dat : File that enlists all nodes that are assumed to have basal signaling activity, which are all nodes except the ligands(Lif, Igf1,Fgf4,ActA and Bmp4) 
+(ii) BasalActivity.dat : File that enlists all nodes that are assumed to have basal signaling activity, which are all nodes except the ligands(Lif, Igf1,Fgf4,ActA and Bmp4)      
 (iii) Suppl_Table_S4_XX_MIDAS.csv(for XX) and Suppl_Table_S4_XO_MIDAS.csv(for XO) : Results from systematic perturbation experimentas form the two cell lines in MIDAS format.    
 (iv) fit_script_withExtRed.R : Script for building the model, plotting model accuracy, finding non-essential links and finding links that improve model fit 
 
