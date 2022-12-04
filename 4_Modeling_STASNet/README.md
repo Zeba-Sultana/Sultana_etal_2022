@@ -25,8 +25,17 @@ It describes the input files and steps for modeling a dataset using a toy exampl
 
 * **Subfolder : 2_Model_Extension**   
 Buiding the initial models for XX and XO using the "fit_script_withExtRed.R", results in the model(.mra) file along other files that decribe the overall fit to data achieved.  Additionally, since the fit script has "extension = TRUE", additional links that can improve the model fit are tested and a file (Extension.csv) enlisting links that can improve the fit to the model in generated.   
-The script "FindingCommonLink_Rscript_MidpValue.R" was used for finding the best common link from the links suggested separately for the XX and XO models.   
-This link was added to the Network.tab file and saved as Network_LA1.tab and a new model using this network was built. This procedure was repeated until no common links that cross the selection threshold were found.    
+The script "FindingCommonLink.R" (which calls "FindingCommonLink_FuncDefinitions.R") was used to find the best common link from the links suggested separately for the XX and XO models. The extension list for the two models is provided as input to "FindingCommonLink.R", which does the follwoing steps :
+1.) Read in the extension.csv for both cell lines   
+2.) Remove links from TFs and Ligands   
+3.) Retain only links that have adjusted p-value < selected threshold and value !=0   
+4.) Calculate %improvement in residual for each cell line   
+5.) Find the intersection list,(Links that appear in both lists)   
+6.) Calculate the sum of %improvement in residual   
+7.) Order the intersection list by descending order of sum of %improvement in residual.   
+The topmost link of this oredered list was added to the Network.tab file and saved as Network_LA1.tab.  A new model using this updated network was built. This procedure was repeated until no common links that cross the selection threshold were found. 
+
+FindingCommonLink_Rscript_MidpValue.R : Summarizes the link selection at all link addition steps and saves the orderred list of link suggestions at each step.
 The R markdown file "Model_Extension_Threshold_p_005.Rmd" summarises the links added to the network, when filtering the links based on a significance threshold of p<0.005 in a likelihood ratio test for the improvement in fit to data and finding the best common link based on highest sum of percentage decrease in model residuals.    
 
 * **Subfolder : 3_Model_Extension_Different_Thresholds**  
