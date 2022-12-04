@@ -18,6 +18,7 @@ The important functions used in the "fitscript" for this modeling project are  b
 * selectMinimalModel() : Function to identify and remove dispensible links in the model which do not contribute significantly to overall fit. In other words, those links which when removed do not result in a significant increase in model residuals.  
 * suggestExtension() : Function to find links that when added to model will result in improvement of fit. The function outputs a list of suggested links along with difference in model residual and the associated p-values.
 
+Many steps in the fitscript can be parallelised, therefore running on a computing cluster is faster.     
 *Note :* For complete documentation of basic STASNet functions and the workflow and for modeling biological networks using perturbation data please refer the following url
 https://github.com/molsysbio/STASNet/blob/master/vignettes/STASNet_vignette.html    
 It describes the input files and steps for modeling a dataset using a toy example of 5 nodes.
