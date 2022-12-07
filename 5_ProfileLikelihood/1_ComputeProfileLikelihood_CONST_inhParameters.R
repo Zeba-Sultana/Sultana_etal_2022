@@ -28,7 +28,7 @@ XX_model_completed = rebuildModel(file.path(XX_LA10_Folder,XX_Model), XX_MIDAS_f
 XO_model_completed = rebuildModel(file.path(XO_LA10_Folder,XO_Model), XO_MIDAS_file)
 
 
-#mkdir _ "cache" : create a directory called cache for the prfiles saved as rds files
+#mkdir _ "cache" : create a directory called cache for the profiles saved as rds files
 folder = "cache/"
 dir.create(folder)
 
@@ -37,6 +37,8 @@ dir.create(folder)
 
 # Need to specify  const_params with parameter IDs for the parameters to be kept constant in this function(checkProfileLikelihood) 
 Inh_CONST_profiles_XX = checkProfileLikelihood("Inh_CONST_XX_PL",XX_model_completed, nb_steps, nb_cores=min(cores,length(XX_model_completed$parameters)), const_params = c(22,23,24,25,26,27,28));
+# When using the checkProfileLikelihood function, the profiles get saved as rds files in the folder called "cache" that was created earlier ?
+
 XX_model_completed_pl = addPLinfos(XX_model_completed, Inh_CONST_profiles_XX);
 exportModel(XX_model_completed_pl,"XX_model_completed_pl.mra")
 niplotPL(Inh_CONST_profiles_XX, data_name="Inh_CONST_XX_PL", folder="./OUTPUT/")
