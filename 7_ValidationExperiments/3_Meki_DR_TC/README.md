@@ -1,7 +1,7 @@
-In this folder, I make the validation figure for Mek-Inhibitor DoseResponse. 
+In this folder, I make the validation figure for Mek-Inhibitor DoseResponse and Time course experimets
 
 
-Summary of the steps followed in the R script "1_Meki_DR_ValidationFigures.R" are as follows.
+A.) Summary of the steps followed in the R script "1_Meki_DR_ValidationFigures.R" are as follows.
 
 ######### STEP 1 : Reading in the data and normalization over the mean signal per gel/replicate #########     
 1.) read in the quantification file and assign the sample names.    
@@ -19,9 +19,8 @@ Plotted using the function Plot_TwoPanel_ValidationPlot_updated
 
 Compare the mean of XX and XO values and save the results as a df     
 
-In this folder, I make the validation figure for Mek-Inhibitor Time Course.    
 
-Summary of the steps followed in the R script "2_Meki_TC_ValidationFig.R" are as follows   
+B.) Summary of the steps followed in the R script "2_Meki_TC_ValidationFig.R" are as follows   
 
 ######### STEP 1 : Reading in the data and normalization over the mean signal per gel/replicate #########     
 
