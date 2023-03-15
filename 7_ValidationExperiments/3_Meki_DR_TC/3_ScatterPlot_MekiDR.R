@@ -4,7 +4,7 @@ library(egg) #needed for set_panel_size
 
 
 # Create folder OUTPUT_PAPER to save figs used in paper
-if(!(file.exists("./OUTPUT_PAPER"))){ # create only if it does not already exist
+if(!(file.exists("./OUTPUT_PAPER"))){
   dir.create("./OUTPUT_PAPER") 
 }
 
@@ -74,7 +74,7 @@ g <- ggplot(PDDR_All_MekTPSplot_FCoXX_subset_no1000_Mek, aes(x=x_axis_factor,y=S
   #facet_grid(~Cell_line, space = "free",scales = "free", switch = "x")+
   stat_summary(fun = mean,geom = "crossbar", size = 0.1, position = position_dodge(width = 1))+
   ylim(0,max(PDDR_All_MekTPSplot_FCoXX_subset_no1000_Mek$Signal)+0.5)+
-  labs(x = "\n MEKi(nM)", #\u03bc is the unicode charachter fro greek
+  labs(x = "\n MEKi(nM)", 
        y = " Rel. phosp. (norm.) ",
        title = "pMEK",
        color = "Cell line" )+
