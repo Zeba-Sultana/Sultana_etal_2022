@@ -48,7 +48,7 @@ Use Mismatch_DATA.csv saved in the OUTPUT folder
 3.) Get names of the treatments that had highest mismatch between Exp data and Initial XX model per analyte.   
 4.) Use the Loop_MaxDiff function to generate Fig 3B (or Fig 3C)   
 
-#### Step 4 : Plot coefficient of determination
+### Step 4 : Plot coefficient of determination
 **Plotting Fig 3B**
 
 
