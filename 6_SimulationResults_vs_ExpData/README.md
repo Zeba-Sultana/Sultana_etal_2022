@@ -1,7 +1,7 @@
 
 Aim : To compare impact of pertubations seen in experiments(data) and that simulated using the initial model and the completed model
 
-The completed model recapituales experimental data much better than the initial model and this can be seen in the following figures.
+Figure 3 of the paper shows that the completed model recapituales experimental data much better than the initial model. Steps follwowed 
 
 
 ####  Step 0 : Merging the WB and Bioplex data  (script : Step0_Merging_Bioplex_WBdata_NonMIDAS.R)      
