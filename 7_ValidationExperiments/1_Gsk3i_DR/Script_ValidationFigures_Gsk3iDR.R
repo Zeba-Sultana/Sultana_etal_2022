@@ -2,7 +2,7 @@
 
 
 ## Libraries
-library(readxl) # Needed for read_excel.Part of tidyverse, but needs to be installed separately.(Working on Mac but not my Linux - Check !)
+library(readxl) # Needed for read_excel.
 library(tidyr)
 library(ggplot2)
 library(ggpubr) # needed for compare_means and some other functions
