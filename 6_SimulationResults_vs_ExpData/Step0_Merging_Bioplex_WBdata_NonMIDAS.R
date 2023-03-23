@@ -1,10 +1,10 @@
 #!/usr/bin/Rscript
 
 library(STASNet)
-library(gdata) #read.xls
-library(openxlsx) # for read.xlsx
+library(gdata) # read.xls
+library(openxlsx) # read.xlsx
 library(plyr) # for ldply
-library(tidyverse) # required for function separate, because that comes from Stringr 
+library(tidyverse) # required for the function separate (package Stringr) 
 
 dir.create("./INPUTS/Exp_Data")
 
