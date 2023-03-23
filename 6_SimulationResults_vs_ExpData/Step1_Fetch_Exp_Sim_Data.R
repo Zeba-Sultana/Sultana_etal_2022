@@ -2,9 +2,7 @@
 
 library(STASNet)
 library(gdata) #read.xls
-# library(plyr) # always load plyr before dplyr
-# library(dplyr) 
-library(tidyverse) # required for function separate, because that comes from Stringr 
+library(tidyverse) #required for function separate, because that comes from Stringr 
 
 ## Create OUTPUT folder to save results
 if(!file.exists("OUTPUT")){
@@ -109,7 +107,7 @@ print("Saved Simulation results from Completed Models")
 ExpData_Folder <-  "./INPUTS/Exp_Data/"
 
 Merged_Bioplex_WB_Points <- read.xls(file.path(ExpData_Folder,"Merged_Log2FC.xls"), as.is = TRUE) #as.is=T: To prevent strings to be converted to factors in column Treatment
-# Perturbation2 column in case of single treatments did not have NA for some reason. So relaced all with NA adn redid the separation of the 2 perturbation names.
+# Perturbation2 column in case of single treatments did not have NA for some reason. So added NA in both comlumns first which overwritten by the correct values by using separate.
 Merged_Bioplex_WB_Points$Perturbation1 <- NA
 Merged_Bioplex_WB_Points$Perturbation2 <- NA
 
