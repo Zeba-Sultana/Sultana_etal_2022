@@ -3,7 +3,7 @@
 
 library(ggplot2)
 library(gdata) #read.xls
-library(plyr) # always load plyr before dplyr
+library(plyr) #load plyr before dplyr
 library(dplyr) 
 library(tidyr)
 library(pheatmap)
