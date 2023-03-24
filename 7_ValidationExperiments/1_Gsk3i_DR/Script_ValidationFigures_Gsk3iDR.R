@@ -23,7 +23,7 @@ quant_folder= "../../RAW_DATA/ValidationExperiments/GSK3i_DR/Analyte_Quant/"
 empiria_folder = "../../RAW_DATA/ValidationExperiments/GSK3i_DR/TPS_Quant/"
 
 
-dir.create("./OUTPUT_PAPER") # Create folder to save OUTPUT data
+dir.create("./OUTPUT_PAPER") # Create folder to save output used in the paper
 
 ################# pAkt/ Akt #################
 
@@ -83,7 +83,7 @@ Gel22_AktDB <-  read_excel(file.path(quant_folder,Gel22_Akt_quant_file))
 Gel22_AktDB_labeled <- ReadInWBData(Gel22_samples, Gel22_AktDB, Gsk3inh_CT_Doses, "Gel22", "Akt")
 #Gel22_AktDB_NormOCom <- Norm_o_ComSample(Gel22_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
 
-# Removing replicate 1, now that I have a new dataset fro that replicate
+# Removing replicate 1, because I repeated the western for this replicate again to have both XX and XO samples together on one gel
 Gel22_AktDB_labeled <- Gel22_AktDB_labeled %>% 
   filter(Replicate != "R1")
 
@@ -125,12 +125,12 @@ Gel23_Akt_NormOMeanRep <- Norm_o_MeanRep(Gel23_AktDB_labeled)
 
 CTDR_Akt_NormOMeanRep <- dplyr::bind_rows(Gel1_Akt_NormOMeanRep,Gel22_Akt_NormOMeanRep, Gel23_Akt_NormOMeanRep) 
 
-######## Fold change Over XX and Over resp Cntrl ##############
+######## Fold change Over untreated XX and Over respective untreated cell line(control)  ##############
 
 CTDR_Akt_FC <- FC_Calculation_updated(CTDR_Akt_NormOMeanRep)
 
 CTDR_Akt_plot <- CTDR_Akt_FC %>% 
-  select(-c(Exp,Gel)) # You can remove whichever columns are not needed
+  select(-c(Exp,Gel)) # Removing columns that are not needed further
 
 
 ################# pP70S6k / TPS #################
@@ -157,12 +157,8 @@ Gel3_samples = c(
 Gel3_P70s6k_quant_file = c("0001725_02_JuneGel3_GSK3iDR_pP70S6k.xls")
 Gel3_P70s6kDB <-  read_excel(file.path(quant_folder,Gel3_P70s6k_quant_file))
 
-# Gel3_TPS_file = "June2020_Gsk3iDR_R1trial_Gel3.xlsx"
-# Gel3_TPS <- read_excel(file.path(empiria_folder,Gel3_TPS_file))
-
 Gel3_TPS_file = "0000584_02_June2020_Gsk3iDR_R1trial_Gel3.xlsx"
 Gel3_TPS <- read_excel(file.path(empiria_folder,Gel3_TPS_file))
-
 
 Gel3_P70s6kDB_labeled <- ReadInWBData_TPS(Gel3_samples, Gel3_P70s6kDB, Gel3_TPS,Gsk3inh_CT_Doses, "Gel3", "P70s6k")
 #Gel3_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel3_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
@@ -283,16 +279,15 @@ Analyte_labels <- c("FCoXX_M2_Akt" = "pAKT", "FCoXX_M2_P70s6k" = "pP70S6K")
 
 
 g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot_FCoXX,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
-  scale_y_continuous(limits = c(0, 1.6)) + ## In this case adding the space for putting stars was easier since the scale was fixed on y also
+  scale_y_continuous(limits = c(0, 1.6)) + ## Adding the space at the top of the plot
   labs(x = "\nGSK3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
-       #y = "Rel. phosp. (norm.)\n",
        y = " Phosph. rel. to \n untreated XX \n",
-       color = "Cell line" )  # color within labs,lets me give user defined labels to the attribute in legend
+       color = "Cell line" )  # color within labs allows user defined labels to the attribute in legend
 
 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("CTDR_pAkt_pP70s6k_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
+ggsave("CTDR_pAkt_pP70s6k_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") 
 
 
 
@@ -306,16 +301,16 @@ Analyte_labels <- c("FCoCntrl_M2_Akt" = "pAKT", "FCoCntrl_M2_P70s6k" = "pP70S6K"
 
 
 g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot_FCoCntrl,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
-  scale_y_continuous(limits = c(0, 1.6)) + ## In this case adding the space for putting stars was easier since the scale was fixed on y also
+  scale_y_continuous(limits = c(0, 1.6)) + ## Adding  space at top
   labs(x = "\nGSK3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
        y = "Rel. phosp. (norm.) \n Fold change over untreated",
       # y = " Phosph. rel. to \n untreated \n",
-       color = "Cell line" )  # color within labs,lets me give user defined labels to the attribute in legend
+       color = "Cell line" )  
 
 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("Fig4C_F_CTDR_pAkt_pP70s6k_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
+ggsave("Fig4C_F_CTDR_pAkt_pP70s6k_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER")
 
 
 ########### T Tests for change from respective untreated cell lines(using FCoCntrl) ########
