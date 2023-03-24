@@ -1,6 +1,6 @@
 In this folder, I make the validation figure for GSK3i DR treatment time-course :
 
-The functions needed for data preprocessing are defined in : "../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R"
+The functions needed for data preprocessing are defined in : "../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R"        
 The functions needed for data plotting are defined in : "../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R"
 
 Summary of the steps followed in the R script are as follows :
