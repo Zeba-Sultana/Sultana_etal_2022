@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library(readxl) #Part of tidyverse, but needs to be installed separately.(Working on Mac but not my Linux - Check !)
+library(readxl) 
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
@@ -9,13 +9,8 @@ library(egg) #needed for set_panel_size
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 
-# quant_folder="../RAW_DATA/ValidationExperiments_WB/Validation_data1/My_Band_Quants/Analytes/"
-# #image_folder="../RAW_DATA/ValidationExperiments_WB/Validation_data1/My_Pics/Analytes/"
-# empiria_folder = "../RAW_DATA/ValidationExperiments_WB/Validation_data1/My_Band_Quants/TPS_Empiria/EmpiriaReports/"
-
 quant_folder= "../../RAW_DATA/ValidationExperiments/ActA_ACTRi_DR/Analyte_Quant/"
 empiria_folder = "../../RAW_DATA/ValidationExperiments/ActA_ACTRi_DR/TPS_Quant/"
-
 
 dir.create("./OUTPUT") # Create folder to save output data
 
@@ -79,7 +74,7 @@ Gel12_Smad2_quant_file = c("0000031_01_JuneGel12_ActivinDR_Smads.xls")
 Gel12_Smad2DB <-  read_excel(file.path(quant_folder,Gel12_Smad2_quant_file))
 
 Gel12_Smad2DB_labeled <- ReadInWBData(Gel12_samples, Gel12_Smad2DB, Activin_Doses, "Gel12", "Smad2")
-Gel12_Smad2DB_NormOCom <- Norm_o_ComSample(Gel12_Smad2DB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel12_Smad2DB_NormOCom <- Norm_o_ComSample(Gel12_Smad2DB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) 
 
 #########  Collate the 3 REPLICATES #####
 
@@ -100,14 +95,15 @@ Gel11_Erk_quant_file = c("0000032_02_JuneGel11_ActivinDR_Erk.xls")
 Gel11_ErkDB <-  read_excel(file.path(quant_folder,Gel11_Erk_quant_file))
 
 Gel11_ErkDB_labeled <- ReadInWBData(Gel11_samples, Gel11_ErkDB, Activin_Doses, "Gel11", "Erk")
-Gel11_ErkDB_NormOCom <- Norm_o_ComSample(Gel11_ErkDB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel11_ErkDB_NormOCom <- Norm_o_ComSample(Gel11_ErkDB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) 
+
 
 #########  Gel12 : R2 + R3XO   #########  
 Gel12_Erk_quant_file = c("0000033_02_JuneGel12_ActivinDR_Erk.xls")
 Gel12_ErkDB <-  read_excel(file.path(quant_folder,Gel12_Erk_quant_file))
 
 Gel12_ErkDB_labeled <- ReadInWBData(Gel12_samples, Gel12_ErkDB, Activin_Doses, "Gel12", "Erk")
-Gel12_ErkDB_NormOCom <- Norm_o_ComSample(Gel12_ErkDB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel12_ErkDB_NormOCom <- Norm_o_ComSample(Gel12_ErkDB_labeled, ComSample_Exp = "ActDR", ComSample_Rep = "R3", ComSample_T = 0 ) 
 
 #########  Collate the 3 REPLICATES #####
 
@@ -158,7 +154,7 @@ Gel13_Smad2_quant_file = c("0000034_02_JuneGel13_SBDR_Smads.xls")
 Gel13_Smad2DB <-  read_excel(file.path(quant_folder,Gel13_Smad2_quant_file))
 
 Gel13_Smad2DB_labeled <- ReadInWBData(Gel13_samples, Gel13_Smad2DB, ActRinh_SB_Doses, "Gel13", "Smad2")
-Gel13_Smad2DB_NormOCom <- Norm_o_ComSample(Gel13_Smad2DB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel13_Smad2DB_NormOCom <- Norm_o_ComSample(Gel13_Smad2DB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) 
 
 
 #########  Gel14 : R2 + R3XO    #########  
@@ -188,7 +184,7 @@ Gel14_Smad2_quant_file = c("0000035_02_JuneGel14_SBDR_Smads.xls")
 Gel14_Smad2DB <-  read_excel(file.path(quant_folder,Gel14_Smad2_quant_file))
 
 Gel14_Smad2DB_labeled <- ReadInWBData(Gel14_samples, Gel14_Smad2DB, ActRinh_SB_Doses, "Gel14", "Smad2")
-Gel14_Smad2DB_NormOCom <- Norm_o_ComSample(Gel14_Smad2DB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel14_Smad2DB_NormOCom <- Norm_o_ComSample(Gel14_Smad2DB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 )
 
 #########  Collate the 3 REPLICATES #####
 
@@ -213,15 +209,14 @@ Gel13_Erk_quant_file = c("0000036_02_JuneGel13_SBDR_pErk.xls")
 Gel13_ErkDB <-  read_excel(file.path(quant_folder,Gel13_Erk_quant_file))
 
 Gel13_ErkDB_labeled <- ReadInWBData(Gel13_samples, Gel13_ErkDB, ActRinh_SB_Doses, "Gel13", "Erk")
-Gel13_ErkDB_NormOCom <- Norm_o_ComSample(Gel13_ErkDB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
-
+Gel13_ErkDB_NormOCom <- Norm_o_ComSample(Gel13_ErkDB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) 
 #########  Gel14 : R2 + R3XO    #########  
 
 Gel14_Erk_quant_file = c("0000037_01_JuneGel14_SBDR_pErk.xls")
 Gel14_ErkDB <-  read_excel(file.path(quant_folder,Gel14_Erk_quant_file))
 
 Gel14_ErkDB_labeled <- ReadInWBData(Gel14_samples, Gel14_ErkDB, ActRinh_SB_Doses, "Gel14", "Erk")
-Gel14_ErkDB_NormOCom <- Norm_o_ComSample(Gel14_ErkDB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
+Gel14_ErkDB_NormOCom <- Norm_o_ComSample(Gel14_ErkDB_labeled, ComSample_Exp = "SBDR", ComSample_Rep = "R3", ComSample_T = 0 )
 
 #########  Collate the 3 REPLICATES #####
 SBDR_Erk_NormOCom_all <- dplyr::bind_rows(Gel13_ErkDB_NormOCom, Gel14_ErkDB_NormOCom)
