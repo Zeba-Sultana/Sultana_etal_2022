@@ -1,6 +1,5 @@
 #!/usr/bin/env Rscript
 
-
 ## Libraries
 library(readxl) # Needed for read_excel.
 library(tidyr)
@@ -11,17 +10,13 @@ library(egg) #needed for set_panel_size, to get predefined sizes of figure panel
 library(plyr)
 library(dplyr)
 
-
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 
-
 Gsk3inh_CT_Doses =c("0","1.5","3","6","12","24")
-
 
 quant_folder= "../../RAW_DATA/ValidationExperiments/GSK3i_DR/Analyte_Quant/"
 empiria_folder = "../../RAW_DATA/ValidationExperiments/GSK3i_DR/TPS_Quant/"
-
 
 dir.create("./OUTPUT_PAPER") # Create folder to save output used in the paper
 
@@ -81,7 +76,6 @@ Gel22_Akt_quant_file = c("0000062_02_JuneGel22_GSK3iDR_Aktp.xls")
 Gel22_AktDB <-  read_excel(file.path(quant_folder,Gel22_Akt_quant_file))
 
 Gel22_AktDB_labeled <- ReadInWBData(Gel22_samples, Gel22_AktDB, Gsk3inh_CT_Doses, "Gel22", "Akt")
-#Gel22_AktDB_NormOCom <- Norm_o_ComSample(Gel22_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
 
 # Removing replicate 1, because I repeated the western for this replicate again to have both XX and XO samples together on one gel
 Gel22_AktDB_labeled <- Gel22_AktDB_labeled %>% 
@@ -114,7 +108,6 @@ Gel23_Akt_quant_file = c("0000063_02_JuneGel23_GSK3iDR_Aktp.xls")
 Gel23_AktDB <-  read_excel(file.path(quant_folder,Gel23_Akt_quant_file))
 
 Gel23_AktDB_labeled <- ReadInWBData(Gel23_samples, Gel23_AktDB, Gsk3inh_CT_Doses, "Gel23", "Akt")
-#Gel23_AktDB_NormOCom <- Norm_o_ComSample(Gel23_AktDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
 
 Gel23_AktDB_labeled <- Gel23_AktDB_labeled %>% 
   filter(Replicate != "R1")
@@ -161,7 +154,6 @@ Gel3_TPS_file = "0000584_02_June2020_Gsk3iDR_R1trial_Gel3.xlsx"
 Gel3_TPS <- read_excel(file.path(empiria_folder,Gel3_TPS_file))
 
 Gel3_P70s6kDB_labeled <- ReadInWBData_TPS(Gel3_samples, Gel3_P70s6kDB, Gel3_TPS,Gsk3inh_CT_Doses, "Gel3", "P70s6k")
-#Gel3_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel3_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0, ComSample_CellLine = c("XO") ) 
 
 Gel3_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel3_P70s6kDB_labeled)
 
@@ -199,8 +191,6 @@ Gel19_P70s6kDB_labeled <- ReadInWBData_TPS(Gel19_samples, Gel19_P70s6kDB, Gel19_
 # Removing replicate 1, now that I have a new dataset for that replicate
 Gel19_P70s6kDB_labeled <- Gel19_P70s6kDB_labeled %>% 
   filter(Replicate != "R1")
-
-#Gel19_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel19_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
 
 Gel19_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel19_P70s6kDB_labeled)
 
@@ -267,28 +257,22 @@ CTDR_All$Cell_line <- factor(CTDR_All$Cell_line, levels = c("XX", "XO", "nn"))
 
 ###### FC over XX #########
 
-CTDR_Allplot_FCoXX <- CTDR_All %>% 
-  select(c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr",grep("FCoXX_M2",colnames(CTDR_All)))) %>% 
-  gather(key = "Analyte", value = "Signal", -c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr"))
-
-Analyte_labels <- c("FCoXX_M2_Akt" = "pAKT", "FCoXX_M2_P70s6k" = "pP70S6K")
-
-#### Setting up the plotting attributes ###
-# MyCellLineColours <- c("XX" = "#FF0000", "XO" = "#0000CD", "nn" = "#000005")
-# MyReplicateShapes <-  c("R1" = 2, "R2" = 0, "R3" = 6, "nn"= 4)
-
-
-g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot_FCoXX,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
-  scale_y_continuous(limits = c(0, 1.6)) + ## Adding the space at the top of the plot
-  labs(x = "\nGSK3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
-       y = " Phosph. rel. to \n untreated XX \n",
-       color = "Cell line" )  # color within labs allows user defined labels to the attribute in legend
-
-
-gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
-grid.arrange(gt)
-ggsave("CTDR_pAkt_pP70s6k_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") 
-
+# CTDR_Allplot_FCoXX <- CTDR_All %>% 
+#   select(c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr",grep("FCoXX_M2",colnames(CTDR_All)))) %>% 
+#   gather(key = "Analyte", value = "Signal", -c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr"))
+# 
+# Analyte_labels <- c("FCoXX_M2_Akt" = "pAKT", "FCoXX_M2_P70s6k" = "pP70S6K")
+# 
+# g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot_FCoXX,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
+#   scale_y_continuous(limits = c(0, 1.6)) + ## Adding the space at the top of the plot
+#   labs(x = "\nGSK3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
+#        y = " Phosph. rel. to \n untreated XX \n",
+#        color = "Cell line" )  # color within labs allows user defined labels to the attribute in legend
+# 
+# 
+# gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
+# grid.arrange(gt)
+# ggsave("CTDR_pAkt_pP70s6k_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") 
 
 
 ###### FC over Cntrl #########
@@ -313,97 +297,43 @@ grid.arrange(gt)
 ggsave("Fig4C_F_CTDR_pAkt_pP70s6k_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER")
 
 
-########### T Tests for change from respective untreated cell lines(using FCoCntrl) ########
+########### Saving Fig 4 data including T Tests for change from respective untreated cell lines(using FCoCntrl) ########
 
-Gsk3i_dose = c(0,1.5,3,6,12,24)
+Fig4_data = CTDR_Allplot_FCoCntrl
+Fig4_data$Analyte = gsub("FCoCntrl_M2_","p",Fig4_data$Analyte) # removed the long name and prefixed "p" for phosphorylated form
 
-Gsk3_XX_Akt_pvals = list()
-for(i in 1:length(Gsk3i_dose) ) {
-  
-  #Unhash_2_Debug
-  #i=1
-  Gsk3_XX_Akt <- CTDR_Allplot_FCoCntrl %>% 
-    ungroup() %>% 
-    select(-c(log2Treatment,Treatment_Fctr)) %>% 
-    filter(Cell_line == "XX") %>% 
-    filter(Analyte == "FCoCntrl_M2_Akt") %>% 
-    filter(Treatment == Gsk3i_dose[i])
-  
-  Gsk3_XX_Akt_pvals$Treatment_value[i] = Gsk3i_dose[i]
-  Gsk3_XX_Akt_pvals$mean[i] = t.test(Gsk3_XX_Akt$Signal, mu=1)$estimate
-  Gsk3_XX_Akt_pvals$p_value[i] = t.test(Gsk3_XX_Akt$Signal, mu=1)$p.value
-  
-}
+Fig4_ReplicateValues = Fig4_data %>% 
+  ungroup() %>% 
+  pivot_wider(names_from = Replicate, values_from = Signal) %>% 
+  select(-c(Treatment_Fctr)) %>% 
+  mutate(Mean=rowMeans(select(.,starts_with("R")), na.rm = TRUE)) %>% 
+  mutate(id = paste0(Cell_line,"_",Treatment,"_",Analyte))
 
-Gsk3_XX_Akt_Ttest <- data.frame((sapply(Gsk3_XX_Akt_pvals,c)))
-Gsk3_XX_Akt_Ttest <- Gsk3_XX_Akt_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(Gsk3_XX_Akt_Ttest, "./OUTPUT_PAPER/Gsk3_XX_Akt_Ttest.xls")
+Fig4_ttests = Fig4_data %>% 
+  ungroup() %>% 
+  group_by(Treatment,Cell_line,Analyte ) %>%
+  summarize(mean.value=t.test(Signal, mu=1)$estimate,p.value = t.test(Signal, mu=1)$p.value) %>% 
+  mutate(id = paste0(Cell_line,"_",Treatment,"_",Analyte))
 
-Gsk3_XO_Akt_pvals = list()
-for(i in 1:length(Gsk3i_dose)) {
-  
-  Gsk3_XO_Akt <- CTDR_Allplot_FCoCntrl %>% 
-    ungroup() %>% 
-    select(-c(log2Treatment,Treatment_Fctr)) %>% 
-    filter(Cell_line == "XO") %>% 
-    filter(Analyte == "FCoCntrl_M2_Akt") %>% 
-    filter(Treatment == Gsk3i_dose[i]) 
-  
-  Gsk3_XO_Akt_pvals$Treatment_value[i] = Gsk3i_dose[i]
-  Gsk3_XO_Akt_pvals$mean[i] = t.test(Gsk3_XO_Akt$Signal, mu=1)$estimate
-  Gsk3_XO_Akt_pvals$p_value[i] = t.test(Gsk3_XO_Akt$Signal, mu=1)$p.value
-  
-}
+Fig4_AllData = left_join(Fig4_ReplicateValues,Fig4_ttests, by="id") %>% 
+  select(-c(Cell_line.y,Treatment.y,Analyte.y,id, mean.value)) %>% 
+  mutate(sig = ifelse(p.value<0.05,"*",""))
+colnames(Fig4_AllData) = gsub(".x","",colnames(Fig4_AllData))
 
-Gsk3_XO_Akt_Ttest <- data.frame((sapply(Gsk3_XO_Akt_pvals,c)))
-Gsk3_XO_Akt_Ttest <- Gsk3_XO_Akt_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(Gsk3_XO_Akt_Ttest, "./OUTPUT_PAPER/Gsk3_XO_Akt_Ttest.xls")
 
-Gsk3_XX_P70s6k_pvals = list()
-for(i in 1:length(Gsk3i_dose) ) {
-  
-  #Unhash_2_Debug
-  #i=1
-  Gsk3_XX_P70s6k <- CTDR_Allplot_FCoCntrl %>% 
-    ungroup() %>% 
-    select(-c(log2Treatment,Treatment_Fctr)) %>% 
-    filter(Cell_line == "XX") %>% 
-    filter(Analyte == "FCoCntrl_M2_P70s6k") %>% 
-    filter(Treatment == Gsk3i_dose[i])
-  
-  Gsk3_XX_P70s6k_pvals$Treatment_value[i] = Gsk3i_dose[i]
-  Gsk3_XX_P70s6k_pvals$mean[i] = t.test(Gsk3_XX_P70s6k$Signal, mu=1)$estimate
-  Gsk3_XX_P70s6k_pvals$p_value[i] = t.test(Gsk3_XX_P70s6k$Signal, mu=1)$p.value
-  
-}
+########## Saving Fig 4 data #######
 
-Gsk3_XX_P70s6k_Ttest <- data.frame((sapply(Gsk3_XX_P70s6k_pvals,c)))
-Gsk3_XX_P70s6k_Ttest <- Gsk3_XX_P70s6k_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(Gsk3_XX_P70s6k_Ttest, "./OUTPUT_PAPER/Gsk3_XX_P70s6k_Ttest.xls")
+Fig4C_data_pAKT = Fig4_AllData %>% 
+  filter(grepl("Akt", Analyte))
+WriteXLS::WriteXLS(Fig4C_data_pAKT, "./OUTPUT_PAPER/Fig4C_data_pAKT.xls")
 
-Gsk3_XO_P70s6k_pvals = list()
-for(i in 1:length(Gsk3i_dose)) {
-  
-  Gsk3_XO_P70s6k <- CTDR_Allplot_FCoCntrl %>% 
-    ungroup() %>% 
-    select(-c(log2Treatment,Treatment_Fctr)) %>% 
-    filter(Cell_line == "XO") %>% 
-    filter(Analyte == "FCoCntrl_M2_P70s6k") %>% 
-    filter(Treatment == Gsk3i_dose[i]) 
-  
-  Gsk3_XO_P70s6k_pvals$Treatment_value[i] = Gsk3i_dose[i]
-  Gsk3_XO_P70s6k_pvals$mean[i] = t.test(Gsk3_XO_P70s6k$Signal, mu=1)$estimate
-  Gsk3_XO_P70s6k_pvals$p_value[i] = t.test(Gsk3_XO_P70s6k$Signal, mu=1)$p.value
-  
-}
+Fig4F_data_pP70S6K = Fig4_AllData %>% 
+  filter(grepl("P70s6k", Analyte))
+WriteXLS::WriteXLS(Fig4F_data_pP70S6K, "./OUTPUT_PAPER/Fig4F_data_pP70S6K.xls")
 
-Gsk3_XO_P70s6k_Ttest <- data.frame((sapply(Gsk3_XO_P70s6k_pvals,c)))
-Gsk3_XO_P70s6k_Ttest <- Gsk3_XO_P70s6k_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(Gsk3_XO_P70s6k_Ttest, "./OUTPUT_PAPER/Gsk3_XO_P70s6k_Ttest.xls")
+
+################
+
 
 TEMP_FILES <- list.files(pattern = "Rplots.pdf$")
 file.remove(TEMP_FILES)
