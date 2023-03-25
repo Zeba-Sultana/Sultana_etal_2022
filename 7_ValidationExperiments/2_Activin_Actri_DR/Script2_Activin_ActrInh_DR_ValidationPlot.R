@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library(readxl) #Part of tidyverse, but needs to be installed separately.
+library(readxl)
 library(tidyr)
 library(tidyverse)
 library(ggplot2)
@@ -49,12 +49,12 @@ colnames(SBDR_Smad2_FC) <- gsub("^FCoCntrl_M2$","pSmad2_by_Smad2_FCoCntrl",colna
 SB_DR_Smad2 <- SBDR_Smad2_FC
 
 
-############### Paper Fig : FCoXX : LOG2 Y scale ####################
-Activin_DR_Smad2 <- Activin_DR_Smad2 %>% 
-  mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
-
-SB_DR_Smad2 <- SB_DR_Smad2 %>% 
-  mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
+# ############### Paper Fig : FCoXX : LOG2 Y scale ####################
+# Activin_DR_Smad2 <- Activin_DR_Smad2 %>% 
+#   mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
+# 
+# SB_DR_Smad2 <- SB_DR_Smad2 %>% 
+#   mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
 
 ############### Paper Fig : FCoXX : Linear y-Scale  ####################
 
@@ -65,7 +65,7 @@ g <- Plot_ReplicatePoints_MeanLine_PaperFig_LOG2y(Activin_DR_Smad2,log2Treatment
 #g <- g + guides(fill = guide_legend(order=1),shape = guide_legend(order=2)) 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("Fig6C_ActSignaling_ActDR_pSmad2_FCoXX_LinearY_5.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER")
+ggsave("Fig6C_ActA_DR_pSmad2.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER")
 
 
 g <- Plot_ReplicatePoints_MeanLine_PaperFig_Minus_LOG2y(SB_DR_Smad2,log2Treatment,pSmad2_by_Smad2_FCoXX)+
@@ -75,7 +75,7 @@ g <- Plot_ReplicatePoints_MeanLine_PaperFig_Minus_LOG2y(SB_DR_Smad2,log2Treatmen
 #g <- g + guides(fill = guide_legend(order=1),shape = guide_legend(order=2)) 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("Fig6C_ActSignaling_SBDR_pSmad2_FCoXX_LinearY_5.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER")
+ggsave("Fig6C_ActRInhibitor_DR_pSmad2.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER")
 
 ########### T-tests ##########
 ########### T Tests for difference between XX and XO in case of FCoXX (Linear y-axis)########
@@ -105,8 +105,27 @@ for(i in 1:length(Activin_dose)) {
 
 ActDR_XX_XO_Smad2_Ttest <- data.frame((sapply(ActDR_XX_XO_Smad2_pvals_FCoXX,c)))
 ActDR_XX_XO_Smad2_Ttest <- ActDR_XX_XO_Smad2_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(ActDR_XX_XO_Smad2_Ttest, "./OUTPUT_PAPER/ActDR_XX_XO_Smad2_Ttest.xls")
+  mutate(sig = ifelse(p_value<0.05,"*","")) %>% 
+  mutate(Treatment=as.numeric(Treatment_value)) %>% 
+  select(-c(Treatment_value))
+
+ActDR_ReplicateValues  = Activin_DR_Smad2 %>% 
+  select(Cell_line,Replicate,Exp,Treatment,log2Treatment,pSmad2_by_Smad2_FCoXX) %>% 
+  pivot_wider(names_from = Replicate,values_from=pSmad2_by_Smad2_FCoXX) %>% 
+  mutate(Mean=rowMeans(select(.,starts_with("R")), na.rm = TRUE))
+
+Fig6C_ActA_DR_data = left_join(ActDR_ReplicateValues,ActDR_XX_XO_Smad2_Ttest, by="Treatment") 
+Fig6C_ActA_DR_data = Fig6C_ActA_DR_data %>% 
+  mutate(mean_XX = ifelse(Cell_line == "XO", NA, mean_XX)) %>% 
+  mutate(mean_XO = ifelse(Cell_line == "XO", NA, mean_XO)) %>% 
+  mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
+  mutate(sig = ifelse(Cell_line == "XO", NA, sig))
+colnames(Fig6C_ActA_DR_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig6C_ActA_DR_data))
+
+WriteXLS::WriteXLS(Fig6C_ActA_DR_data, "./OUTPUT_PAPER/Fig6C_ActA_DR_pSmad2_data.xls")
+
+
+###### Activin Receptor Inhibitor(SB) dose response ###########
 
 SB_dose = c(0,0.2,0.6,1.77,5.33,16)
 SBDR_XX_XO_Smad2_pvals_FCoXX = list()
@@ -133,8 +152,26 @@ for(i in 1:length(SB_dose)) {
 
 SBDR_XX_XO_Smad2_Ttest <- data.frame((sapply(SBDR_XX_XO_Smad2_pvals_FCoXX,c)))
 SBDR_XX_XO_Smad2_Ttest <- SBDR_XX_XO_Smad2_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(SBDR_XX_XO_Smad2_Ttest, "./OUTPUT_PAPER/SBDR_XX_XO_Smad2_Ttest.xls")
+  mutate(sig = ifelse(p_value<0.05,"*","")) %>% 
+  mutate(Treatment=as.numeric(Treatment_value)) %>% 
+  select(-c(Treatment_value))
+
+SBDR_ReplicateValues  = SB_DR_Smad2 %>% 
+  select(Cell_line,Replicate,Exp,Treatment,log2Treatment,pSmad2_by_Smad2_FCoXX) %>% 
+  pivot_wider(names_from = Replicate,values_from=pSmad2_by_Smad2_FCoXX) %>% 
+  mutate(Mean=rowMeans(select(.,starts_with("R")), na.rm = TRUE))
+
+Fig6C_ActRInhibitor_DR_data = left_join(SBDR_ReplicateValues,SBDR_XX_XO_Smad2_Ttest, by="Treatment") 
+Fig6C_ActRInhibitor_DR_data = Fig6C_ActRInhibitor_DR_data %>% 
+  mutate(mean_XX = ifelse(Cell_line == "XO", NA, mean_XX)) %>% 
+  mutate(mean_XO = ifelse(Cell_line == "XO", NA, mean_XO)) %>% 
+  mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
+  mutate(sig = ifelse(Cell_line == "XO", NA, sig))
+colnames(Fig6C_ActRInhibitor_DR_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig6C_ActRInhibitor_DR_data))
+
+WriteXLS::WriteXLS(Fig6C_ActRInhibitor_DR_data, "./OUTPUT_PAPER/Fig6C_ActRInhibitor_DR_pSmad2_data.xls")
+
+
 
 print("All steps executed : Script 2 : plots saved in OUTPUT_PAPER")
 
