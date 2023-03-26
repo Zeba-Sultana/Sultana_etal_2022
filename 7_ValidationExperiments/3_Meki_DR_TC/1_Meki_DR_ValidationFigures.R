@@ -237,7 +237,7 @@ dummy_Raf <- data.frame(log2Treatment = 0, Signal = pcRaf_max,
 dummy_data <- rbind(dummy_Mek,dummy_Raf)
 dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("FCoXX_M2_Mek", "FCoXX_M2_cRaf")) # This is to get the correct sequence in the Facet_wrap
 
-#################### ACTUAL PLOTTING ###########
+#################### PLOT ###########
 
 g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoXX,"log2Treatment","Signal", Analyte_labels,"free_y")+
   geom_blank(data=dummy_data) + 
@@ -297,7 +297,7 @@ dummy_Raf <- data.frame(log2Treatment = 0, Signal = pcRaf_max,
 dummy_data <- rbind(dummy_Mek,dummy_Raf)
 dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("FCoCntrl_M2_Mek", "FCoCntrl_M2_cRaf")) # This is to get the correct sequence in the Facet_wrap
 
-#################### PLOTTING ###########
+#################### PLOT ###########
 
 g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoCntrl,"log2Treatment","Signal", Analyte_labels,"free_y")+
   geom_blank(data=dummy_data) + 
@@ -404,9 +404,6 @@ for(i in 1:length(Meki_dose) ) {
 }
 
 PDDR_Mek_FCoXX_Ttest <- data.frame((sapply(PDDR_XX_XO_Mek_pvals_FCoXX,c)))
-PDDR_Mek_FCoXX_Ttest <- PDDR_Mek_FCoXX_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(PDDR_Mek_FCoXX_Ttest, "./OUTPUT_MekiDR/PDDR_Mek_FCoXX_Ttest.xls")
 
 
 PDDR_XX_XO_cRaf_pvals_FCoXX = list()
@@ -434,8 +431,61 @@ for(i in 1:length(Meki_dose) ) {
 }
 
 PDDR_cRaf_FCoXX_Ttest <- data.frame((sapply(PDDR_XX_XO_cRaf_pvals_FCoXX,c)))
+
+
+########## Saving the data for fig 7 F #########
+PDDR_Mek_FCoXX = PDDR_All_MekTPSplot_FCoXX %>% 
+  filter(grepl("Mek", Analyte))
+
+PDDR_Raf_FCoXX = PDDR_All_MekTPSplot_FCoXX %>% 
+  filter(grepl("Raf", Analyte))
+
+
+############ pMek values #######
+PDDR_Mek_FCoXX_Ttest <- PDDR_Mek_FCoXX_Ttest %>% 
+  mutate(sig = ifelse(p_value<0.05,"*","")) %>% 
+  mutate(Treatment=as.numeric(Treatment_value)) %>% 
+  select(-c(Treatment_value))
+
+PDDR_Mek_ReplicateValues  = PDDR_Mek_FCoXX %>% #colnames()
+  select(Cell_line,Replicate,Treatment,log2Treatment,Analyte,Signal) %>% 
+  pivot_wider(names_from = Replicate,values_from=Signal) %>% 
+  rowwise() %>% 
+  mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
+
+Fig7F_MekiDR_Mek_data = left_join(PDDR_Mek_ReplicateValues,PDDR_Mek_FCoXX_Ttest, by="Treatment") 
+Fig7F_MekiDR_Mek_data = Fig7F_MekiDR_Mek_data %>% 
+  mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
+  mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
+  mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
+  mutate(sig = ifelse(Cell_line == "XO", NA, sig))
+colnames(Fig7F_MekiDR_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7F_MekiDR_Mek_data))
+
+############ pRaf values #######
 PDDR_cRaf_FCoXX_Ttest <- PDDR_cRaf_FCoXX_Ttest %>% 
-  mutate(sig = ifelse(p_value<0.05,"*",""))
-WriteXLS::WriteXLS(PDDR_cRaf_FCoXX_Ttest, "./OUTPUT_MekiDR/PDDR_cRaf_FCoXX_Ttest.xls")
+  mutate(sig = ifelse(p_value<0.05,"*","")) %>% 
+  mutate(Treatment=as.numeric(Treatment_value)) %>% 
+  select(-c(Treatment_value))
+
+PDDR_Raf_ReplicateValues  = PDDR_Raf_FCoXX %>% #colnames()
+  select(Cell_line,Replicate,Treatment,log2Treatment,Analyte,Signal) %>% 
+  pivot_wider(names_from = Replicate,values_from=Signal) %>% 
+  rowwise() %>% 
+  mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
+
+Fig7F_MekiDR_Raf_data = left_join(PDDR_Raf_ReplicateValues,PDDR_cRaf_FCoXX_Ttest, by="Treatment") 
+Fig7F_MekiDR_Raf_data = Fig7F_MekiDR_Raf_data %>% 
+  mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
+  mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
+  mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
+  mutate(sig = ifelse(Cell_line == "XO", NA, sig))
+colnames(Fig7F_MekiDR_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7F_MekiDR_Raf_data))
+
+
+
+Fig7F_MekiDR_All_data = dplyr::bind_rows(Fig7F_MekiDR_Mek_data,Fig7F_MekiDR_Raf_data)
+Fig7F_MekiDR_All_data$Analyte = gsub("FCoXX_M2_", "",Fig7F_MekiDR_All_data$Analyte)
+WriteXLS::WriteXLS(Fig7F_MekiDR_All_data, "./OUTPUT_PAPER/Fig7F_PDDR_All_data.xls")
+
 
 print("Script1 : MekiDR - All steps executed ")
