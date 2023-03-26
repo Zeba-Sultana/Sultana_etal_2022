@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 
-library(readxl) #Part of tidyverse, but needs to be installed separately.(Working on Mac but not my Linux - Check !)
+library(readxl) 
 library(tidyr)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
-library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
+#library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
 library(ggpubr) # needed for compare_means
 library(egg) #needed for set_panel_size
 library(knitr) # for making HTML tables using the function kable()
@@ -15,10 +15,8 @@ source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 
 Mekinh_PD_Doses =c("0","0.4","1.3","4","12","37","111","333","1000")
 
-
 quant_folder= "../../RAW_DATA/ValidationExperiments/MEKi_TC_DR/Analyte_Quant/"
 empiria_folder = "../../RAW_DATA/ValidationExperiments/MEKi_TC_DR/TPS_Quant/"
-
 
 dir.create("./OUTPUT_MekiDR") # Create folder to save all output data
 
@@ -26,10 +24,6 @@ dir.create("./OUTPUT_MekiDR") # Create folder to save all output data
 if(!(file.exists("./OUTPUT_PAPER"))){ # create only if it does not already exist
   dir.create("./OUTPUT_PAPER") 
 }
-
-
-
-
 
 ##################################################################
 ####### pMek Normalized over total protein stain   ###############
@@ -143,10 +137,6 @@ PDDR_MekTPS_FC <- FC_Calculation_updated(PDDR_MekTPS)
 
 PDDR_MekTPS_plot <- PDDR_MekTPS_FC %>% 
   select(-c(Exp,Gel )) 
-# select(-c(matches("totalP|TPS"))) %>% 
-# select(-c(matches("Norm_totalP|Norm_TPS")))
-
-
 
 
 ##################################################################
@@ -177,7 +167,6 @@ Gel25_TPS <- read_excel(file.path(empiria_folder,Gel25_TPS_file))
 Gel25_cRafTPS_labeled <- ReadInWBData_TPS(Gel25_samples,Gel25_cRaf, Gel25_TPS, Mekinh_PD_Doses, "Gel25", "cRaf")
 Gel25_cRafTPS_labeled <- Gel25_cRafTPS_labeled %>% 
   filter(Cell_line != "Common")
-
 
 Gel25_cRafTPS_NormOMeanRep <- Norm_o_MeanRep(Gel25_cRafTPS_labeled)
 
@@ -308,7 +297,7 @@ dummy_Raf <- data.frame(log2Treatment = 0, Signal = pcRaf_max,
 dummy_data <- rbind(dummy_Mek,dummy_Raf)
 dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("FCoCntrl_M2_Mek", "FCoCntrl_M2_cRaf")) # This is to get the correct sequence in the Facet_wrap
 
-#################### ACTUAL PLOTTING ###########
+#################### PLOTTING ###########
 
 g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoCntrl,"log2Treatment","Signal", Analyte_labels,"free_y")+
   geom_blank(data=dummy_data) + 
@@ -327,8 +316,6 @@ Meki_dose = c(0,0.4,1.3,4,12,37,111,333,1000)
 PDDR_XX_XO_Mek_pvals_FCoCntrl = list()
 for(i in 1:length(Meki_dose)) {
   
-  #Unhash_2_debug
-  #i=3
   
   PDDR_XX_Mek_values <- PDDR_All_MekTPSplot_FCoCntrl %>% 
     ungroup() %>% 
@@ -360,7 +347,7 @@ WriteXLS::WriteXLS(PDDR_Mek_FCoCntrl_Ttest, "./OUTPUT_MekiDR/PDDR_Mek_FCoCntrl_T
 PDDR_XX_XO_cRaf_pvals_FCoCntrl = list()
 for(i in 1:length(Meki_dose) ) {
   
-  #i=2
+
   PDDR_XX_cRaf_values <- PDDR_All_MekTPSplot_FCoCntrl %>% 
     ungroup() %>% 
     select(-c(log2Treatment,Treatment_Fctr)) %>% 
