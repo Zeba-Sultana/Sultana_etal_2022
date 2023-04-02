@@ -9,7 +9,6 @@ library(tidyr)
 library(pheatmap)
 library(RColorBrewer)
 library(reshape2)
-library("corrplot", lib.loc="~/Library/R/3.3/library") # for correlation matrices
 library(scales)
 library(cowplot) # for plot_grid
 library(egg) #needed for set_panel_size, to get predefined sizes of figure panels.
@@ -48,6 +47,41 @@ Init_Model_SimulationResults <- Init_Model_SimulationResults %>%
 FinalModel_SimulationResults <- read.csv(file.path(SimulationData_Folder,"Final_Model_SimulationResults_Points.csv"))
 FinalModel_SimulationResults <- FinalModel_SimulationResults %>% 
   select(-X)
+
+######### Saving the data used for Fig 1C and Fig 3A 
+Experimental_Data = Exp_Data %>% 
+  select(-c(grep("pvalue", colnames(Exp_Data)), "ID")) %>% 
+  mutate(Category = rep("Experimental data",nrow(Exp_Data))) %>% 
+  select(Category,x_status,Perturbation1,Perturbation2,Akt_p,Gsk3_p,mTor_p,Mek_p,Erk_p,Stat3_p,Smad2_p)
+
+SimulationResults_Initial_Model = Init_Model_SimulationResults %>% 
+  mutate(Category = rep("Initial Model",nrow(Init_Model_SimulationResults))) %>% 
+  select(Category,x_status,Perturbation1,Perturbation2,Akt_p,Gsk3_p,mTor_p,Mek_p,Erk_p,Stat3_p,Smad2_p) %>%  
+  arrange(desc(x_status),Perturbation1,Perturbation2) 
+
+SimulationResults_Completed_Model =FinalModel_SimulationResults %>% 
+  mutate(Category = rep("Completed Model",nrow(FinalModel_SimulationResults))) %>%
+  select(Category,x_status,Perturbation1,Perturbation2,Akt_p,Gsk3_p,mTor_p,Mek_p,Erk_p,Stat3_p,Smad2_p) %>%  
+  arrange(desc(x_status),Perturbation1,Perturbation2) 
+
+Fig1C_3A = bind_rows(Experimental_Data,SimulationResults_Initial_Model,SimulationResults_Completed_Model)
+
+
+Order_Perturbations_single = c("Igfri","Pi3ki","Fgf4","Fgfri","Meki","NoLif","Jaki","Activin","Bmp4ri","Gsk3i")
+Fig1C_Data = Fig1C_3A %>% 
+  filter(is.na(Perturbation2)) %>% 
+  filter(Category == "Experimental data") %>% 
+  select(-c(Perturbation2)) %>% 
+  arrange(desc(x_status),Perturbation1 %in% Order_Perturbations_single,match(Perturbation1, Order_Perturbations_single)) 
+#%in% operator checks if a value is contained in a vector, while the match() function returns the position of a value in a vector.Together, these two functions work to sort the column based on a user-defined vector.
+WriteXLS::WriteXLS(Fig1C_Data,"./OUTPUT_PAPER/Single_Heatmaps/Fig1C_Data.xls")
+
+Order_Perturbations_comb = c(NA,"Igfri","Pi3ki","Fgf4","Fgfri","Meki","NoLif","Jaki","Activin","Bmp4ri","Gsk3i")
+Order_Category = c("Experimental data","Initial Model","Completed Model")
+Fig3A_Data = Fig1C_3A %>% 
+  arrange(Category %in% Order_Category,match(Category, Order_Category),desc(x_status),Perturbation1 %in% Order_Perturbations_comb,match(Perturbation1, Order_Perturbations_comb),Perturbation2 %in% Order_Perturbations_comb,match(Perturbation2, Order_Perturbations_comb)) 
+#%in% operator checks if a value is contained in a vector, while the match() function returns the position of a value in a vector.Together, these two functions work to sort the column based on a user-defined vector.
+WriteXLS::WriteXLS(Fig3A_Data,"./OUTPUT_PAPER/Comb_Heatmaps/Fig3A_Data.xls")
 
 
 ################### Aktp ###################
@@ -547,13 +581,18 @@ grid.arrange(gt)
 ggsave("Fig3A_7_CombHeatmap_Smad2p.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER/Comb_Heatmaps/") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
 
 
-
-
 #### Single Heatmap
 G1 <- Plot_SmallHeatMap_Single_ExpOnly(COMBO_Data_Smad2p,SINGLE_Data_Smad2p,"pSmad2")
 gt=set_panel_size(G1,width=unit(1,'cm'),height=unit(4.2,'cm'))
 grid.arrange(gt)
 ggsave("Fig1C_7_SingleHeatmap_Smad2p_ExpOnly.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER/Single_Heatmaps/")
+
+
+# Save the session info to a file
+sink("session_info_Step2.txt") # open file
+sessionInfo()
+sink()# Stop redirecting the output to the file
+
 
 
 print("All heatmaps saved")

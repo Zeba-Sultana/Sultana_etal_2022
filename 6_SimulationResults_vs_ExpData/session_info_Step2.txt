@@ -1,0 +1,27 @@
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS High Sierra 10.13.6
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] pheatmap_1.0.12    gdata_2.18.0       readxl_1.3.1       RColorBrewer_1.1-2 egg_0.4.5         
+ [6] gridExtra_2.3      cowplot_1.1.0      scales_1.1.1       reshape2_1.4.4     tidyr_1.1.2       
+[11] dplyr_1.0.2        plyr_1.8.6         ggplot2_3.3.2     
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5       pillar_1.4.7     compiler_3.6.3   cellranger_1.1.0 WriteXLS_6.0.0  
+ [6] tools_3.6.3      digest_0.6.27    lifecycle_0.2.0  tibble_3.0.4     gtable_0.3.0    
+[11] pkgconfig_2.0.3  rlang_0.4.8      cli_2.2.0        rstudioapi_0.13  withr_2.3.0     
+[16] stringr_1.4.0    gtools_3.8.2     generics_0.1.0   vctrs_0.3.5      grid_3.6.3      
+[21] tidyselect_1.1.0 glue_1.4.2       R6_2.5.0         fansi_0.4.1      purrr_0.3.4     
+[26] farver_2.0.3     magrittr_2.0.1   ellipsis_0.3.1   assertthat_0.2.1 colorspace_2.0-0
+[31] labeling_0.4.2   stringi_1.5.3    munsell_0.5.0    crayon_1.3.4    
