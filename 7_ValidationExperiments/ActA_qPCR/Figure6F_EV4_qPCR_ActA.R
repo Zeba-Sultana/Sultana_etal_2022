@@ -37,7 +37,7 @@ Results = read.xls(file.path(qPCR_folder,"Results_Compiled_230616_Rinput.xls"))
 #colnames(Results)
 #Processig the Results file
 Results_filt = Results %>% 
-  select(grep("Oct4|Nanog|Fgf5|Otx2|Prdm14|Dnmt3b", colnames(Results))) 
+  select(grep("Oct4|Nanog|Fgf5|Otx2", colnames(Results))) 
 colnames(Results_filt) = gsub("Oct4_SampleName", "Samples",colnames(Results_filt) )
 Results_filt$Samples = gsub("PgK", "Pgk",Results_filt$Samples) 
 Results_filt = Results_filt %>% 
