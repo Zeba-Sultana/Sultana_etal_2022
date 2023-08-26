@@ -27,7 +27,6 @@ BP_FC_STASNet$Akt[BP_FC_STASNet$Replicate == "R4" & BP_FC_STASNet$x_status == "X
 ## Prepping the WB Data 
 WBN2_GelMean_Norm_FC$Treatment <- gsub("Bmp4i","Bmp4ri",WBN2_GelMean_Norm_FC$Treatment) #Correcting the names of some inhibitors for consistency 
 WBN2_GelMean_Norm_FC$Treatment <- gsub("Gsk3bi","Gsk3i",WBN2_GelMean_Norm_FC$Treatment) #Correcting the names of some inhibitors for consistency
-# Donot need to do it in BP data at this level, because I already do it at the time of MIDAS file creation from lxb data.
 
 WBN2_GelMean_Norm_FC <- WBN2_GelMean_Norm_FC %>% filter(Treatment !="Common") # removing the common samples that had been added for normalization
 colnames(WBN2_GelMean_Norm_FC) <- gsub("_FC","",colnames(WBN2_GelMean_Norm_FC))
