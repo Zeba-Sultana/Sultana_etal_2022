@@ -49,13 +49,6 @@ colnames(SBDR_Smad2_FC) <- gsub("^FCoCntrl_M2$","pSmad2_by_Smad2_FCoCntrl",colna
 SB_DR_Smad2 <- SBDR_Smad2_FC
 
 
-# ############### Paper Fig : FCoXX : LOG2 Y scale ####################
-# Activin_DR_Smad2 <- Activin_DR_Smad2 %>% 
-#   mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
-# 
-# SB_DR_Smad2 <- SB_DR_Smad2 %>% 
-#   mutate(log2_pSmad2_by_Smad2_FCoXX = log2(pSmad2_by_Smad2_FCoXX))
-
 ############### Paper Fig : FCoXX : Linear y-Scale  ####################
 
 g <- Plot_ReplicatePoints_MeanLine_PaperFig_LOG2y(Activin_DR_Smad2,log2Treatment,pSmad2_by_Smad2_FCoXX)+
