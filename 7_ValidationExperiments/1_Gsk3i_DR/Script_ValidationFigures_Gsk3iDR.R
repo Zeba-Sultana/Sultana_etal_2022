@@ -1,12 +1,12 @@
 #!/usr/bin/env Rscript
 
 ## Libraries
-library(readxl) # Needed for read_excel.
+library(readxl) # for read_excel
 library(tidyr)
 library(ggplot2)
-library(ggpubr) # needed for compare_means and some other functions
+library(ggpubr) # for compare_means etc
 library(ggrepel) 
-library(egg) #needed for set_panel_size, to get predefined sizes of figure panels.
+library(egg) 
 library(plyr)
 library(dplyr)
 
@@ -45,7 +45,6 @@ Gel1_Akt_quant_file = c("0001720_02_JuneGel1_GSK3iDR_Aktp.xls")
 Gel1_AktDB <-  read_excel(file.path(quant_folder,Gel1_Akt_quant_file))
 
 Gel1_AktDB_labeled <- ReadInWBData(Gel1_samples, Gel1_AktDB, Gsk3inh_CT_Doses, "Gel1", "Akt")
-#might give an error here if plyr is loaded after dplyr
 
 Gel1_Akt_NormOMeanRep <- Norm_o_MeanRep(Gel1_AktDB_labeled)
 
@@ -228,7 +227,6 @@ Gel20_P70s6kDB_labeled <- ReadInWBData_TPS(Gel20_samples, Gel20_P70s6kDB, Gel20_
 Gel20_P70s6kDB_labeled <- Gel20_P70s6kDB_labeled %>% 
   filter(Replicate != "R1")
 
-#Gel20_P70s6kDB_NormOCom <- Norm_o_ComSample(Gel20_P70s6kDB_labeled, ComSample_Exp = "CTDR", ComSample_Rep = "R1", ComSample_T = 0 ) # I have 2 common samples, untreated control of both cell lines of R3. Hence I dont specify cell line.
 
 Gel20_P70s6k_NormOMeanRep <- Norm_o_MeanRep(Gel20_P70s6kDB_labeled)
 
@@ -255,24 +253,6 @@ CTDR_All <- CTDR_All %>%
 
 CTDR_All$Cell_line <- factor(CTDR_All$Cell_line, levels = c("XX", "XO", "nn"))
 
-###### FC over XX #########
-
-# CTDR_Allplot_FCoXX <- CTDR_All %>% 
-#   select(c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr",grep("FCoXX_M2",colnames(CTDR_All)))) %>% 
-#   gather(key = "Analyte", value = "Signal", -c("Cell_line","Replicate","Treatment","log2Treatment","Treatment_Fctr"))
-# 
-# Analyte_labels <- c("FCoXX_M2_Akt" = "pAKT", "FCoXX_M2_P70s6k" = "pP70S6K")
-# 
-# g <- Plot_TwoPanel_ValidationPlot_updated(CTDR_Allplot_FCoXX,"log2Treatment", "Signal" ,Analyte_labels,"fixed")+
-#   scale_y_continuous(limits = c(0, 1.6)) + ## Adding the space at the top of the plot
-#   labs(x = "\nGSK3i(\u03bcM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
-#        y = " Phosph. rel. to \n untreated XX \n",
-#        color = "Cell line" )  # color within labs allows user defined labels to the attribute in legend
-# 
-# 
-# gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
-# grid.arrange(gt)
-# ggsave("CTDR_pAkt_pP70s6k_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") 
 
 
 ###### FC over Cntrl #########
