@@ -35,7 +35,7 @@ MyCategoryFill <- c("Init-XX"= "#dd1c77","Init-XO"="#fde0dd",
 g <- ggplot(Coeff_Determination_long, aes(x=Model, y=Coeff,color = Model, fill = Model))+
   facet_grid(.~analyte_name)+
   geom_bar(stat = "identity",width=0.6, position = position_dodge(width=0.2),size=0.7)+ #To make thinner outline ;size=0.7 (instead of 1)
-  scale_fill_manual(values= MyCategoryFill, labels=c("Initial Model:XX","Completed Model:XX","Initial Model:XO","Completed Model:XO"))+ # fill works only for some point shapes , Eg 21 -25
+  scale_fill_manual(values= MyCategoryFill, labels=c("Initial Model:XX","Completed Model:XX","Initial Model:XO","Completed Model:XO"))+ 
   scale_color_manual(values= MyCategoryColours, labels=c("Initial Model:XX","Completed Model:XX","Initial Model:XO","Completed Model:XO"))+
   ylim(-0.5,1)+
   MyPaperTheme+
