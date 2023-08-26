@@ -13,5 +13,3 @@ Note on the x-axis : Aim was to have the plot such that moving from left to righ
 For increasing Activin signaling it is straight forward. Plotted the log2(Activin concentration+1).
 For decreasing signaling via Activin pathway we used Activin receptor inhibitor.  In this case plotted -1*log2(SB conc+1) on the x-axis, to invert the sequence (highest concentration of the inhibitor lies at the left most side of the plot).        
         
-
-
