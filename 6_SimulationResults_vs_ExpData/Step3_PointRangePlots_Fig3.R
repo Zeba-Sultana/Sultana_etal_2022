@@ -3,16 +3,15 @@
 library(STASNet)
 library(ggplot2)
 library(gdata) #read.xls
-library(plyr) # always load plyr before dplyr
+library(plyr) # load plyr before dplyr
 library(dplyr) 
 library(tidyr)
 library(pheatmap)
 library(RColorBrewer)
 library(reshape2)
 library("corrplot", lib.loc="~/Library/R/3.3/library") # for correlation matrices
-library(cowplot) # for plot_grid , for get_legend
-library(egg) #needed for set_panel_size, to get predefined sizes of figure panels.
-#library(tidyverse)
+library(cowplot) 
+library(egg) #for set_panel_size
 
 source("../7_ValidationExperiments/ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 source("./Functions_Plotting_PointRange.R")
@@ -50,10 +49,9 @@ Sim_DATA <- ALL_DATA %>%
 
 #### Doing the T-Tests
 perturbations <- unique(as.character(Exp_DATA$Treatment_id)) # 53 perturbations in all
-analytes <- colnames(Exp_DATA)[1:7] # 9 : 4 From Bioplex("Gsk3b","Mek","mTor","Akt" - Bioplex Stat3 is not to be used) and 5 from WB("ERKp","STAT3p","SMAD2p","bCatenin","GAPDH")
+analytes <- colnames(Exp_DATA)[1:7] # 9 : 4 From Bioplex("Gsk3b","Mek","mTor","Akt" ) and 5 from WB("ERKp","STAT3p","SMAD2p","bCatenin","GAPDH")
 
-t_result = list() #prep empty list to store t-test results
-#res <- t.test(weight ~ group, data = my_data, var.equal = TRUE)
+t_result = list() 
 for(perturbation_name in perturbations){
   
   ##Unhash To test
@@ -70,8 +68,7 @@ for(perturbation_name in perturbations){
     subdata <- each_perturbation_data %>%
       select(c(substituteDirect(analyte),Category))
     
-    # t_result[[perturbation_name]][[analyte]]$a_pvalue <- t.test(get(substituteDirect(analyte)) ~ Category, data = subdata, var.equal = FALSE)$p.value   # This WORKS
-    
+
     subdata_XX <- subdata %>% 
       filter(grepl("XX",Category)) %>% 
       select(substituteDirect(analyte))
@@ -80,11 +77,7 @@ for(perturbation_name in perturbations){
       filter(grepl("XO",Category))%>% 
       select(substituteDirect(analyte))
     
-    # t_result[[perturbation_name]][[analyte]]$a_pvalue <- 
-    #   t.test(as.data.frame(subdata_XX[,analyte]),as.data.frame(subdata_XO[,analyte]), alternative = "two.sided", var.equal = FALSE)$p.value   
-    
-    #ANS <- t.test(as.data.frame(subdata_XX),as.data.frame(subdata_XO),alternative = "two.sided", var.equal = FALSE)
-    
+
     t_test_XX_XO <- t.test(as.data.frame(subdata_XX),as.data.frame(subdata_XO),alternative = "two.sided", var.equal = FALSE) #Paired = FALSE by default
     t_result[[perturbation_name]][[analyte]]$XX_mean<- t_test_XX_XO$estimate[1]
     t_result[[perturbation_name]][[analyte]]$XO_mean<- t_test_XX_XO$estimate[2]
@@ -95,8 +88,7 @@ for(perturbation_name in perturbations){
     t_result[[perturbation_name]][[analyte]]$XO_0_pvalue <- t.test(as.data.frame(subdata_XO), mu = 0, alternative = "two.sided")$p.value
     
     
-    #but I need to save atleast two values in this list so that later when I convert the t-test results to dataframe the column names are correctly retained. For some reason it does not work correctly if I save only pvalue
-    
+
     
   }
 }
@@ -267,7 +259,7 @@ Init_XO_Accuracy_MM_long <- Init_XO_Accuracy_MM_long %>%
 
 Highest_mismatch_AllPert_perAnalayte <- Init_XO_Accuracy_MM_long %>% 
   group_by(Analyte) %>% 
-  slice(which.max(abs(mismatch_value))) ## Best way to get the rows corresponding to the max values !!
+  slice(which.max(abs(mismatch_value))) 
 
 
 Analyte_seq <- c("pAKT","pGSK3","pmTOR","pMEK","pERK","pSTAT3","pSMAD2")
