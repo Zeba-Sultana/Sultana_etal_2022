@@ -11,9 +11,9 @@ library(RColorBrewer)
 library(reshape2)
 library(scales)
 library(cowplot) # for plot_grid
-library(egg) #needed for set_panel_size, to get predefined sizes of figure panels.
+library(egg) # for set_panel_size
 
-# For setting theme now using the common theme defined in the validation plot folder :
+
 source("../7_ValidationExperiments/ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 source("./Functions_PlottingHeatmaps.R")
 
@@ -28,7 +28,6 @@ Treatment_Labels = c("DMSO","IGFRi","PI3Ki","FGF4","FGFRi","MEKi","NoLIF","JAKi"
 ### Exp Data
 
 ExpData_Folder <-  "./INPUTS/Exp_Data/"
-#Merged_Bioplex_WB <- read.xls(file.path(ExpData_Folder,"Merged_Log2FC.xls"), as.is = TRUE) #as.is=T: To prevent strings to be converted to factors in column Treatment
 
 t_results_all_df <- read.csv(file.path(ExpData_Folder,"t_results_all_df.csv"))
 Exp_Data <- t_results_all_df %>% 
