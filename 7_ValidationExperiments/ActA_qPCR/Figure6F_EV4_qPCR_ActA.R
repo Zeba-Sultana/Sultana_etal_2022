@@ -1,6 +1,7 @@
 library(gdata)
 library(tidyverse)
 library(egg)
+library(readxl)
 
 
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
@@ -71,7 +72,8 @@ Results_All_Activin = Results_All %>%
 
 Results_All_Activin_long =  Results_All_Activin %>% 
   pivot_longer(cols=-c(Rep,Sample,CellLine,cell_line,x_status,Treatment), names_to = "gene", values_to = "value")
-
+Results_All_Activin_long$value = round(Results_All_Activin_long$value,digits = 6)
+Results_All_Activin_long = distinct(Results_All_Activin_long)
 
 ############ Saving source data ###########
 Fig6F_ActA_Fgf5_qPCR = Results_All_Activin_long %>% 
