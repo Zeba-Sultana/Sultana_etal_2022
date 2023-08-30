@@ -5,7 +5,6 @@ library(tidyr)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
-#library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
 library(ggpubr) # needed for compare_means
 library(egg) #needed for set_panel_size
 library(knitr) # for making HTML tables using the function kable()
@@ -21,7 +20,7 @@ empiria_folder = "../../RAW_DATA/ValidationExperiments/MEKi_TC_DR/TPS_Quant/"
 dir.create("./OUTPUT_MekiDR") # Create folder to save all output data
 
 # Create folder OUTPUT_PAPER to save figs used in paper
-if(!(file.exists("./OUTPUT_PAPER"))){ # create only if it does not already exist
+if(!(file.exists("./OUTPUT_PAPER"))){ 
   dir.create("./OUTPUT_PAPER") 
 }
 
