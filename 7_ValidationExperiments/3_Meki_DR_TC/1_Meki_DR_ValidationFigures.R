@@ -5,9 +5,10 @@ library(tidyr)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
+#library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
 library(ggpubr) # needed for compare_means
 library(egg) #needed for set_panel_size
-#library(knitr) # for making HTML tables using the function kable()
+library(knitr) # for making HTML tables using the function kable()
 
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
@@ -20,7 +21,7 @@ empiria_folder = "../../RAW_DATA/ValidationExperiments/MEKi_TC_DR/TPS_Quant/"
 dir.create("./OUTPUT_MekiDR") # Create folder to save all output data
 
 # Create folder OUTPUT_PAPER to save figs used in paper
-if(!(file.exists("./OUTPUT_PAPER"))){ 
+if(!(file.exists("./OUTPUT_PAPER"))){ # create only if it does not already exist
   dir.create("./OUTPUT_PAPER") 
 }
 
@@ -223,11 +224,11 @@ write.csv(PDDR_All_MekTPSplot_FCoXX, file = "./OUTPUT_MekiDR/PDDR_All_MekTPSplot
 
 pMek_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Mek", Analyte))
-pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space is needed
+pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space i need
 
 pcRaf_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Raf", Analyte))
-pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space is needed
+pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space i need
 
 dummy_Mek <- data.frame(log2Treatment = 0, Signal = pMek_max,
                         Analyte = "FCoXX_M2_Mek", Cell_line = "Common", stringsAsFactors=FALSE)
@@ -240,14 +241,14 @@ dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("FCoXX_M2_Mek", "FCoXX
 
 g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoXX,"log2Treatment","Signal", Analyte_labels,"free_y")+
   geom_blank(data=dummy_data) + 
-  labs(x = "\n MEKi(nM)+1 [log2]", 
+  labs(x = "\n MEKi(nM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
        y = " Rel. phosp. (norm.)  \n",
        color = "Cell line" )
 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
 ggsave("PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_MekiDR")
-ggsave("Fig7I_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
+ggsave("Fig7F_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
 
 
 
