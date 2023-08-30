@@ -10,7 +10,6 @@ source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
 source("../ValidationPlot_Functions/Functions_Revision.R")
 
-#quant_folder= "/Users/sultana/PHD_PROJECT_Zeba/Zeba_PhD_PAPER/SCRIPTS_Sultana_etal_2021_GitHubPrep_PREP_V3/7_ValidationExperiments/5_Revision_Exp_FIGS/RAW_DATA/WB/Quantification"
 quant_folder= "../../RAW_DATA/ValidationExperiments/U0126_WB/"
 dir.create("./OUTPUT_PAPER") # Create folder to save output data
 
@@ -180,7 +179,7 @@ g=ggplot(BlotC_pMek_FC_l, aes(x=sample, y = Value )) +
         strip.text.y = element_text(size = 7, colour = "black", angle = 90,face = "plain" ))
 gt=egg::set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("./OUTPUT_PAPER/Fig_Supp_7C_U0126_pMek.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./") 
+ggsave("./OUTPUT_PAPER/Fig_7C_U0126_pMEK.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./") 
 
 
 ######### U0126 DR : pcRaf ###########
@@ -300,7 +299,7 @@ BlotC_pcRaf_FC_l = BlotC_pcRaf_FC_l %>%
 
 Fig7C_U0126_pRAF1 = BlotC_pcRaf_FC_l %>% 
   select(c(sample,Cell_line,x_status,Replicate,TreatmentType,Variable,Value))
-WriteXLS::WriteXLS(Fig7C_U0126_pRAF1, "./OUTPUT_PAPER/Fig7C_U0126_pRAF1.xls")
+WriteXLS::WriteXLS(Fig7C_U0126_pRAF1, "./OUTPUT_PAPER/Fig7D_U0126_pRAF1.xls")
 
 sample_order = c("1.8_XX_dmso", "1.8_XX_U0","1.8_XO_dmso","1.8_XO_U0","E14_XY_dmso","E14_XY_U0")
 sample_names = c("1.8_XX_dmso", "1.8_XX_U0","1.8_XO_dmso","1.8_XO_U0","E14_XY_dmso","E14_XY_U0")
@@ -351,7 +350,7 @@ g=ggplot(BlotC_pcRaf_FC_l, aes(x=sample, y = Value )) +
 
 gt=egg::set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("./OUTPUT_PAPER/Fig_Supp_7C_U0126_pcRaf.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./") 
+ggsave("./OUTPUT_PAPER/Fig_7D_U0126_pRAF1.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./") 
 
 
 #### Statistical Tests ####
@@ -387,7 +386,7 @@ t.test(to.test$FC,mu=1)
 
 
 ### pRAF
-data = read_excel('./OUTPUT_PAPER/Fig7C_U0126_pRAF1.xls') %>%
+data = read_excel('./OUTPUT_PAPER/Fig7D_U0126_pRAF1.xls') %>%
   mutate (nr.x = ifelse(x_status=='XX',2,1)) %>% 
   pivot_wider(names_from = Variable, values_from = Value)
 
