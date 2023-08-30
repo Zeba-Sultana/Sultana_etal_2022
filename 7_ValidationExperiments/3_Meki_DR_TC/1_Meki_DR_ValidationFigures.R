@@ -7,7 +7,7 @@ library(tidyverse)
 library(ggplot2)
 library(ggpubr) # needed for compare_means
 library(egg) #needed for set_panel_size
-library(knitr) # for making HTML tables using the function kable()
+#library(knitr) # for making HTML tables using the function kable()
 
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Analysis.R")
 source("../ValidationPlot_Functions/U_Functions_ValidationExp_Plotting.R")
