@@ -247,7 +247,7 @@ g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoXX,"log2Treatme
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
 ggsave("PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_MekiDR")
-ggsave("Fig7F_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
+ggsave("Fig7I_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
 
 
 
