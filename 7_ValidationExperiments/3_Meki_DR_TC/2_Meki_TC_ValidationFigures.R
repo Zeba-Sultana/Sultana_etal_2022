@@ -104,7 +104,7 @@ PDTC_pMek_pcRaf_Joinplot <- PDTC_pMek_pcRaf_Join %>%
 
 PDTC_pMek_pcRaf_Joinplot$Treatment_factor <- factor(PDTC_pMek_pcRaf_Joinplot$Treatment_numeric)
 
-PDTC_pMek_pcRaf_Joinplot$Analyte <- factor(PDTC_pMek_pcRaf_Joinplot$Analyte, levels = c("pMek_FCoXX_M2","pcRaf_FCoXX_M2")) ## This is needed in order to plot pMek before pcRaf in the facet_wrap
+PDTC_pMek_pcRaf_Joinplot$Analyte <- factor(PDTC_pMek_pcRaf_Joinplot$Analyte, levels = c("pMek_FCoXX_M2","pcRaf_FCoXX_M2")) 
 Analyte_labels <- c("pMek_FCoXX_M2" = "pMEK", "pcRaf_FCoXX_M2" = "pRAF1")
 
 ##############Save data file  ############
@@ -130,7 +130,7 @@ dummy_Mek <- data.frame(Treatment_factor = 0, Signal = pMek_max,
 dummy_Raf <- data.frame(Treatment_factor = 0, Signal = pcRaf_max,
                         Analyte = "pcRaf_FCoXX_M2", Cell_line = "Common", stringsAsFactors=FALSE) 
 dummy_data <- rbind(dummy_Mek,dummy_Raf)
-dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("pMek_FCoXX_M2", "pcRaf_FCoXX_M2")) # This is to get the correct sequence in the Facet_wrap
+dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("pMek_FCoXX_M2", "pcRaf_FCoXX_M2")) # To get the correct sequence in the Facet_wrap
 
 #################### PLOT ###########
 
@@ -138,14 +138,14 @@ g <- Plot_TwoPanel_ValidationPlot_updated(CombinedData=PDTC_pMek_pcRaf_Joinplot,
   geom_blank(data=dummy_data) + 
   labs(x = "\n Time(h) ",
        y = "Rel. phos. (norm.)\n",
-       color = "Cell line" ) + # color within labs,lets me give user defined labels to the attribute in legend
+       color = "Cell line" ) + # color within labs for user defined labels to the attribute in legend
   theme(axis.text.x = element_text(size = 7, face = "plain", angle = 45, vjust = 1.2, hjust = 1)) # previous option was face= "bold")
 
 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
 ggsave("PDTC_pMek_pcRaf_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_MekiTC") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
-ggsave("Fig7CDi_PDTC_pMek_pcRaf_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
+ggsave("Fig7FGi_PDTC_pMek_pcRaf_FCoXX.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
 
 
 
@@ -193,13 +193,13 @@ g <- Plot_TwoPanel_ValidationPlot_updated(CombinedData=PDTC_pMek_pcRaf_Joinplot_
   geom_blank(data=dummy_data) + 
   labs(x = "\n Time(h) ",
        y = "Rel. phosp. (norm.)\n Fold change over untreated\n",
-       color = "Cell line" ) + # color within labs,lets me give user defined labels to the attribute in legend
+       color = "Cell line" ) + # color within labs for user defined labels to the attribute in legend
   theme(axis.text.x = element_text(size = 7, face = "plain", angle = 45, vjust = 1.2, hjust = 1)) # previous option was face= "bold")
 
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
-ggsave("PDTC_pMek_pcRaf_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_MekiTC") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
-ggsave("Fig7CDii_PDTC_pMek_pcRaf_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") # device = cairo_pdf was tried to get the greek letter in pdf, but not yet successful in that
+ggsave("PDTC_pMek_pcRaf_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_MekiTC") 
+ggsave("Fig7FGii_PDTC_pMek_pcRaf_FCoCntrl.pdf", gt, dpi=300, useDingbats=FALSE ,path = "./OUTPUT_PAPER") 
 
 
 ########### T Tests for difference between XX and XO in case of FCoXX ########
@@ -333,7 +333,7 @@ PDTC_cRaf_FCoCntrl_Ttest <- data.frame((sapply(PDTC_XX_XO_cRaf_pvals_FCoCntrl,c)
 
 
 
-########## Saving the data for fig 7 C and D : fold change over untreated XX(FCoXX) #########
+########## Saving the data for fig 7 F and G : fold change over untreated XX(FCoXX) #########
 PDTC_Mek_FCoXX = PDTC_pMek_pcRaf_Joinplot %>% 
   filter(grepl("Mek", Analyte))
 
@@ -354,13 +354,13 @@ PDTC_Mek_ReplicateValues  = PDTC_Mek_FCoXX %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7CD_MekiTC_Mek_data = left_join(PDTC_Mek_ReplicateValues,PDTC_Mek_FCoXX_Ttest, by="Treatment") 
-Fig7CD_MekiTC_Mek_data = Fig7CD_MekiTC_Mek_data %>% 
+Fig7FG_MekiTC_Mek_data = left_join(PDTC_Mek_ReplicateValues,PDTC_Mek_FCoXX_Ttest, by="Treatment") 
+Fig7FG_MekiTC_Mek_data = Fig7FG_MekiTC_Mek_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7CD_MekiTC_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7CD_MekiTC_Mek_data))
+colnames(Fig7FG_MekiTC_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7FG_MekiTC_Mek_data))
 
 ############ pRaf values #######
 PDTC_cRaf_FCoXX_Ttest <- PDTC_cRaf_FCoXX_Ttest %>% 
@@ -375,19 +375,19 @@ PDTC_Raf_ReplicateValues  = PDTC_Raf_FCoXX %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7CD_MekiTC_Raf_data = left_join(PDTC_Raf_ReplicateValues,PDTC_cRaf_FCoXX_Ttest, by="Treatment") 
-Fig7CD_MekiTC_Raf_data = Fig7CD_MekiTC_Raf_data %>% 
+Fig7FG_MekiTC_Raf_data = left_join(PDTC_Raf_ReplicateValues,PDTC_cRaf_FCoXX_Ttest, by="Treatment") 
+Fig7FG_MekiTC_Raf_data = Fig7FG_MekiTC_Raf_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7CD_MekiTC_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7CD_MekiTC_Raf_data))
+colnames(Fig7FG_MekiTC_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7FG_MekiTC_Raf_data))
 
-Fig7CDi_PDTC_Mek_Raf_FCoXX_dat = dplyr::bind_rows(Fig7CD_MekiTC_Mek_data,Fig7CD_MekiTC_Raf_data)
-Fig7CDi_PDTC_Mek_Raf_FCoXX_dat$Analyte = gsub("_FCoXX_M2", "",Fig7CDi_PDTC_Mek_Raf_FCoXX_dat$Analyte)
-WriteXLS::WriteXLS(Fig7CDi_PDTC_Mek_Raf_FCoXX_dat, "./OUTPUT_PAPER/Fig7CDi_PDTC_Mek_Raf_FCoXX_dat.xls")
+Fig7FGi_PDTC_Mek_Raf_FCoXX_dat = dplyr::bind_rows(Fig7FG_MekiTC_Mek_data,Fig7FG_MekiTC_Raf_data)
+Fig7FGi_PDTC_Mek_Raf_FCoXX_dat$Analyte = gsub("_FCoXX_M2", "",Fig7FGi_PDTC_Mek_Raf_FCoXX_dat$Analyte)
+WriteXLS::WriteXLS(Fig7FGi_PDTC_Mek_Raf_FCoXX_dat, "./OUTPUT_PAPER/Fig7FGi_PDTC_Mek_Raf_FCoXX_dat.xls")
 
-########## Saving the data for fig 7 C and D : fold change over respective untreated cellline(FCoC) #########
+########## Saving the data for fig 7 F and G : fold change over respective untreated cellline(FCoC) #########
 PDTC_Mek_FCoCntrl = PDTC_pMek_pcRaf_Joinplot_OverCntrl %>% 
   filter(grepl("Mek", Analyte))
 
@@ -408,13 +408,13 @@ PDTC_Mek_ReplicateValues  = PDTC_Mek_FCoCntrl %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7CD_MekiTC_Mek_data = left_join(PDTC_Mek_ReplicateValues,PDTC_Mek_FCoCntrl_Ttest, by="Treatment") 
-Fig7CD_MekiTC_Mek_data = Fig7CD_MekiTC_Mek_data %>% 
+Fig7FG_MekiTC_Mek_data = left_join(PDTC_Mek_ReplicateValues,PDTC_Mek_FCoCntrl_Ttest, by="Treatment") 
+Fig7FG_MekiTC_Mek_data = Fig7FG_MekiTC_Mek_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7CD_MekiTC_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7CD_MekiTC_Mek_data))
+colnames(Fig7FG_MekiTC_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7FG_MekiTC_Mek_data))
 
 ############ pRaf values #######
 PDTC_cRaf_FCoCntrl_Ttest <- PDTC_cRaf_FCoCntrl_Ttest %>% 
@@ -429,17 +429,17 @@ PDTC_Raf_ReplicateValues  = PDTC_Raf_FCoCntrl %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7CD_MekiTC_Raf_data = left_join(PDTC_Raf_ReplicateValues,PDTC_cRaf_FCoCntrl_Ttest, by="Treatment") 
-Fig7CD_MekiTC_Raf_data = Fig7CD_MekiTC_Raf_data %>% 
+Fig7FG_MekiTC_Raf_data = left_join(PDTC_Raf_ReplicateValues,PDTC_cRaf_FCoCntrl_Ttest, by="Treatment") 
+Fig7FG_MekiTC_Raf_data = Fig7FG_MekiTC_Raf_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7CD_MekiTC_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7CD_MekiTC_Raf_data))
+colnames(Fig7FG_MekiTC_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7FG_MekiTC_Raf_data))
 
-Fig7CDii_PDTC_Mek_Raf_FCoC_dat = dplyr::bind_rows(Fig7CD_MekiTC_Mek_data,Fig7CD_MekiTC_Raf_data)
-Fig7CDii_PDTC_Mek_Raf_FCoC_dat$Analyte = gsub("_FCoCntrl_M2", "",Fig7CDii_PDTC_Mek_Raf_FCoC_dat$Analyte)
-WriteXLS::WriteXLS(Fig7CDii_PDTC_Mek_Raf_FCoC_dat, "./OUTPUT_PAPER/Fig7CDii_PDTC_Mek_Raf_FCoC_dat.xls")
+Fig7FGii_PDTC_Mek_Raf_FCoC_dat = dplyr::bind_rows(Fig7FG_MekiTC_Mek_data,Fig7FG_MekiTC_Raf_data)
+Fig7FGii_PDTC_Mek_Raf_FCoC_dat$Analyte = gsub("_FCoCntrl_M2", "",Fig7FGii_PDTC_Mek_Raf_FCoC_dat$Analyte)
+WriteXLS::WriteXLS(Fig7FGii_PDTC_Mek_Raf_FCoC_dat, "./OUTPUT_PAPER/Fig7FGii_PDTC_Mek_Raf_FCoC_dat.xls")
 
 
 
