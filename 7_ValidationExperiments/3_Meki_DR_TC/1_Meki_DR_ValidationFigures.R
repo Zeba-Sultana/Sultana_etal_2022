@@ -5,7 +5,6 @@ library(tidyr)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
-#library(Rmisc) # for summarySE function. Was needed to get the mean+-sd ribbon plot
 library(ggpubr) # needed for compare_means
 library(egg) #needed for set_panel_size
 library(knitr) # for making HTML tables using the function kable()
@@ -21,7 +20,7 @@ empiria_folder = "../../RAW_DATA/ValidationExperiments/MEKi_TC_DR/TPS_Quant/"
 dir.create("./OUTPUT_MekiDR") # Create folder to save all output data
 
 # Create folder OUTPUT_PAPER to save figs used in paper
-if(!(file.exists("./OUTPUT_PAPER"))){ # create only if it does not already exist
+if(!(file.exists("./OUTPUT_PAPER"))){ 
   dir.create("./OUTPUT_PAPER") 
 }
 
@@ -224,11 +223,11 @@ write.csv(PDDR_All_MekTPSplot_FCoXX, file = "./OUTPUT_MekiDR/PDDR_All_MekTPSplot
 
 pMek_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Mek", Analyte))
-pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space i need
+pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space is needed
 
 pcRaf_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Raf", Analyte))
-pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space i need
+pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space is needed
 
 dummy_Mek <- data.frame(log2Treatment = 0, Signal = pMek_max,
                         Analyte = "FCoXX_M2_Mek", Cell_line = "Common", stringsAsFactors=FALSE)
@@ -248,7 +247,7 @@ g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoXX,"log2Treatme
 gt=set_panel_size(g,width=unit(2.8,'cm'),height=unit(2.8,'cm'))
 grid.arrange(gt)
 ggsave("PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_MekiDR")
-ggsave("Fig7F_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
+ggsave("Fig7I_PDDR_pMekTPS_pcRaf_FCoXX_MEANline.pdf", gt, dpi=300, useDingbats=FALSE, path = "./OUTPUT_PAPER") 
 
 
 
@@ -284,11 +283,11 @@ write.csv(PDDR_All_MekTPSplot_FCoCntrl, file = "./OUTPUT_MekiDR/PDDR_All_MekTPSp
 
 pMek_max <- PDDR_All_MekTPSplot_FCoCntrl %>%
   filter(grepl("Mek", Analyte))
-pMek_max <-max(pMek_max$Signal) + 5 # the number is based on how much space i need
+pMek_max <-max(pMek_max$Signal) + 5 # the number is based on how much space is needed
 
 pcRaf_max <- PDDR_All_MekTPSplot_FCoCntrl %>%
   filter(grepl("Raf", Analyte))
-pcRaf_max <-max(pcRaf_max$Signal) + 0.15 # the number is based on how much space i need
+pcRaf_max <-max(pcRaf_max$Signal) + 0.15 # the number is based on how much space is needed
 
 dummy_Mek <- data.frame(log2Treatment = 0, Signal = pMek_max,
                         Analyte = "FCoCntrl_M2_Mek", Cell_line = "Common", stringsAsFactors=FALSE)
@@ -453,13 +452,13 @@ PDDR_Mek_ReplicateValues  = PDDR_Mek_FCoXX %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7F_MekiDR_Mek_data = left_join(PDDR_Mek_ReplicateValues,PDDR_Mek_FCoXX_Ttest, by="Treatment") 
-Fig7F_MekiDR_Mek_data = Fig7F_MekiDR_Mek_data %>% 
+Fig7I_MekiDR_Mek_data = left_join(PDDR_Mek_ReplicateValues,PDDR_Mek_FCoXX_Ttest, by="Treatment") 
+Fig7I_MekiDR_Mek_data = Fig7I_MekiDR_Mek_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7F_MekiDR_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7F_MekiDR_Mek_data))
+colnames(Fig7I_MekiDR_Mek_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7I_MekiDR_Mek_data))
 
 ############ pRaf values #######
 PDDR_cRaf_FCoXX_Ttest <- PDDR_cRaf_FCoXX_Ttest %>% 
@@ -473,19 +472,19 @@ PDDR_Raf_ReplicateValues  = PDDR_Raf_FCoXX %>% #colnames()
   rowwise() %>% 
   mutate(Mean=mean(c(R1,R2,R3), na.rm = TRUE))
 
-Fig7F_MekiDR_Raf_data = left_join(PDDR_Raf_ReplicateValues,PDDR_cRaf_FCoXX_Ttest, by="Treatment") 
-Fig7F_MekiDR_Raf_data = Fig7F_MekiDR_Raf_data %>% 
+Fig7I_MekiDR_Raf_data = left_join(PDDR_Raf_ReplicateValues,PDDR_cRaf_FCoXX_Ttest, by="Treatment") 
+Fig7I_MekiDR_Raf_data = Fig7I_MekiDR_Raf_data %>% 
   mutate(XX_mean = ifelse(Cell_line == "XO", NA, XX_mean)) %>% 
   mutate(XO_mean = ifelse(Cell_line == "XO", NA, XO_mean)) %>% 
   mutate(p_value = ifelse(Cell_line == "XO", NA, p_value)) %>% 
   mutate(sig = ifelse(Cell_line == "XO", NA, sig))
-colnames(Fig7F_MekiDR_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7F_MekiDR_Raf_data))
+colnames(Fig7I_MekiDR_Raf_data) = gsub("p_value","p_value(XXvsXO)",colnames(Fig7I_MekiDR_Raf_data))
 
 
 
-Fig7F_MekiDR_All_data = dplyr::bind_rows(Fig7F_MekiDR_Mek_data,Fig7F_MekiDR_Raf_data)
-Fig7F_MekiDR_All_data$Analyte = gsub("FCoXX_M2_", "",Fig7F_MekiDR_All_data$Analyte)
-WriteXLS::WriteXLS(Fig7F_MekiDR_All_data, "./OUTPUT_PAPER/Fig7F_PDDR_All_data.xls")
+Fig7I_MekiDR_All_data = dplyr::bind_rows(Fig7I_MekiDR_Mek_data,Fig7I_MekiDR_Raf_data)
+Fig7I_MekiDR_All_data$Analyte = gsub("FCoXX_M2_", "",Fig7I_MekiDR_All_data$Analyte)
+WriteXLS::WriteXLS(Fig7I_MekiDR_All_data, "./OUTPUT_PAPER/Fig7I_PDDR_All_data.xls")
 
 
 print("Script1 : MekiDR - All steps executed ")
