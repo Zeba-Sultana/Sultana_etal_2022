@@ -223,11 +223,11 @@ write.csv(PDDR_All_MekTPSplot_FCoXX, file = "./OUTPUT_MekiDR/PDDR_All_MekTPSplot
 
 pMek_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Mek", Analyte))
-pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space i need
+pMek_max <-max(pMek_max$Signal) + 2 # the number is based on how much space is needed
 
 pcRaf_max <- PDDR_All_MekTPSplot_FCoXX %>%
   filter(grepl("Raf", Analyte))
-pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space i need
+pcRaf_max <-max(pcRaf_max$Signal) + 0.5 # the number is based on how much space is needed
 
 dummy_Mek <- data.frame(log2Treatment = 0, Signal = pMek_max,
                         Analyte = "FCoXX_M2_Mek", Cell_line = "Common", stringsAsFactors=FALSE)
@@ -240,7 +240,7 @@ dummy_data$Analyte = factor(dummy_data$Analyte, levels =c("FCoXX_M2_Mek", "FCoXX
 
 g <- Plot_TwoPanel_ValidationPlot_updated(PDDR_All_MekTPSplot_FCoXX,"log2Treatment","Signal", Analyte_labels,"free_y")+
   geom_blank(data=dummy_data) + 
-  labs(x = "\n MEKi(nM)+1 [log2]", #\u03bc is the unicode charachter fro greek mu
+  labs(x = "\n MEKi(nM)+1 [log2]", 
        y = " Rel. phosp. (norm.)  \n",
        color = "Cell line" )
 
